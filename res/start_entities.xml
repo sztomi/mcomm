@@ -1,0 +1,124 @@
+<?xml encoding="utf-8"?>
+<Entities>
+	<Player>
+		<Components>
+			<Sprite>
+				<Texture>sprite1</Texture>
+				<X>0</X>
+				<Y>0</Y>
+			</Sprite>
+			<Transform>
+				<Scale>
+					<X>2.0</X>
+					<Y>2.0</Y>
+				</Scale>
+				<Origin>
+					<X>16.0</X>
+					<Y>16.0</Y>
+				</Origin>
+				<Position>
+					<X>300.0</X>
+					<Y>200.0</Y>
+				</Position>
+			</Transform>
+			<Speed>
+				<X>60.0</X>
+				<Y>60.0</Y>
+			</Speed>
+			<AnimationFrames>
+				<AnimationFrame>
+					<TexCoordX>1</TexCoordX>
+					<TexCoordY>0</TexCoordY>
+					<Length>130</Length>
+				</AnimationFrame>
+				<AnimationFrame>
+					<TexCoordX>0</TexCoordX>
+					<TexCoordY>0</TexCoordY>
+					<Length>100</Length>
+				</AnimationFrame>
+				<AnimationFrame>
+					<TexCoordX>2</TexCoordX>
+					<TexCoordY>0</TexCoordY>
+					<Length>130</Length>
+				</AnimationFrame>
+			</AnimationFrames>
+		</Components>
+		<Systems>
+			<KeyboardInput />
+			<Velocity />
+			<Renderable />
+			<SpriteAnimation>
+				<StartFrame>0</StartFrame>
+			</SpriteAnimation>
+		</Systems>
+	</Player>
+
+	<Rock>
+		<Components>
+			<Sprite>
+				<Texture>sprite1</Texture>
+				<X>15</X>
+				<Y>15</Y>
+			</Sprite>
+			<Transform>
+				<Position>
+					<X>400.0</X>
+					<Y>300.0</Y>
+				</Position>
+				<Scale>
+					<X>2.0</X>
+					<Y>2.0</Y>
+				</Scale>
+			</Transform>
+		</Components>
+		<Systems>
+			<Renderable />
+		</Systems>
+	</Rock>
+
+	<Rock>
+		<Components>
+			<Sprite>
+				<Texture>sprite1</Texture>
+				<X>15</X>
+				<Y>15</Y>
+			</Sprite>
+			<Transform>
+				<Position>
+					<X>50.0</X>
+					<Y>140.0</Y>
+				</Position>
+				<Scale>
+					<X>2.0</X>
+					<Y>2.0</Y>
+				</Scale>
+			</Transform>
+		</Components>
+		<Systems>
+			<Renderable />
+		</Systems>
+	</Rock>
+
+    <Text>
+        <Components>
+            <Text>
+                Hello World!
+            </Text>
+			<Transform>
+				<Position>
+					<X>10</X>
+					<Y>10</Y>
+				</Position>
+            </Transform>
+            <Font>
+                <Size>44</Size>
+                <FileName>res/fonts/zx_spectrum-7.ttf</FileName>
+                <Size>22</Size>
+            </Font>
+        </Components>
+        <Systems>
+            <TextRender />
+        </Systems>
+    </Text>
+
+</Entities>
