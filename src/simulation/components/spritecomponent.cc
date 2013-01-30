@@ -2,15 +2,16 @@
 #include "pugixml.hpp"
 
 #include "spritecomponent.h"
+#include "drawablecomponent.h"
 #include "media/texturemanager.h"
 
 namespace mcomm
 {
 
 SpriteComponent::SpriteComponent()
-	: m_sprite(), m_sprite_coord_x(0), m_sprite_coord_y(0)
+	: m_sprite(), m_texture(), m_sprite_coord_x(0), m_sprite_coord_y(0)
 {
-
+    m_sprite = std::make_shared<sf::Sprite>();
 }
 
 std::string SpriteComponent::toString() const
@@ -23,9 +24,11 @@ void SpriteComponent::init(const pugi::xml_node& xml)
 	setTexture(xml.child("Texture").text().as_string());
 	setSpriteCoordX(xml.child("X").text().as_int());
 	setSpriteCoordY(xml.child("Y").text().as_int());
+
+    m_parent->COMPONENT(Drawable)->setDrawable(m_sprite);
 }
 
-sf::Sprite SpriteComponent::sprite() const
+std::shared_ptr<sf::Sprite> SpriteComponent::sprite() const
 {
 	return m_sprite;
 }
@@ -33,7 +36,7 @@ sf::Sprite SpriteComponent::sprite() const
 void SpriteComponent::setTexture(const std::string& id)
 {
 	m_texture = TextureManager::instance().texture(id);
-	m_sprite.setTexture(*m_texture.get());
+	m_sprite->setTexture(*m_texture.get());
 }
 
 void SpriteComponent::setSpriteCoordX(int value)
@@ -55,7 +58,7 @@ void SpriteComponent::updateTexRectangle()
 	int x = sprite_size_x * m_sprite_coord_x;
 	int y = sprite_size_y * m_sprite_coord_y;
 
-	m_sprite.setTextureRect(
+	m_sprite->setTextureRect(
 		sf::IntRect(x, y, sprite_size_x, sprite_size_y)
 	);
 }

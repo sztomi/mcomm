@@ -1,12 +1,14 @@
-<?xml encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Entities>
 	<Player>
 		<Components>
-			<Sprite>
-				<Texture>sprite1</Texture>
-				<X>0</X>
-				<Y>0</Y>
-			</Sprite>
+            <Drawable>
+                <Sprite>
+                    <Texture>sprite1</Texture>
+                    <X>0</X>
+                    <Y>0</Y>
+                </Sprite>
+            </Drawable>
 			<Transform>
 				<Scale>
 					<X>2.0</X>
@@ -46,7 +48,7 @@
 		<Systems>
 			<KeyboardInput />
 			<Velocity />
-			<Renderable />
+			<Render />
 			<SpriteAnimation>
 				<StartFrame>0</StartFrame>
 			</SpriteAnimation>
@@ -55,11 +57,13 @@
 
 	<Rock>
 		<Components>
-			<Sprite>
-				<Texture>sprite1</Texture>
-				<X>15</X>
-				<Y>15</Y>
-			</Sprite>
+            <Drawable>
+                <Sprite>
+                    <Texture>sprite1</Texture>
+                    <X>15</X>
+                    <Y>15</Y>
+                </Sprite>
+            </Drawable>
 			<Transform>
 				<Position>
 					<X>400.0</X>
@@ -72,17 +76,19 @@
 			</Transform>
 		</Components>
 		<Systems>
-			<Renderable />
+			<Render />
 		</Systems>
 	</Rock>
 
 	<Rock>
 		<Components>
-			<Sprite>
-				<Texture>sprite1</Texture>
-				<X>15</X>
-				<Y>15</Y>
-			</Sprite>
+            <Drawable>
+                <Sprite>
+                    <Texture>sprite1</Texture>
+                    <X>15</X>
+                    <Y>15</Y>
+                </Sprite>
+            </Drawable>
 			<Transform>
 				<Position>
 					<X>50.0</X>
@@ -95,29 +101,30 @@
 			</Transform>
 		</Components>
 		<Systems>
-			<Renderable />
+			<Render />
 		</Systems>
 	</Rock>
 
     <Text>
         <Components>
-            <Text>
-                Hello World!
-            </Text>
+            <Drawable>
+                <Text>
+                    <Font>
+                        <Size>44</Size>
+                        <FileName>res/fonts/zx_spectrum-7.ttf</FileName>
+                    </Font>
+                    <Value>Hello World!</Value>
+                </Text>
+            </Drawable>
 			<Transform>
 				<Position>
 					<X>10</X>
 					<Y>10</Y>
 				</Position>
             </Transform>
-            <Font>
-                <Size>44</Size>
-                <FileName>res/fonts/zx_spectrum-7.ttf</FileName>
-                <Size>22</Size>
-            </Font>
         </Components>
         <Systems>
-            <TextRender />
+            <Render />
         </Systems>
     </Text>
 

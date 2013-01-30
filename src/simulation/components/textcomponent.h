@@ -1,6 +1,15 @@
 #pragma once
 
+#include <memory>
+
+#include <SFML/Graphics/Text.hpp>
+
 #include "simulation/component.h"
+
+namespace sf
+{
+    class Text;
+}
 
 namespace mcomm
 {
@@ -8,6 +17,8 @@ namespace mcomm
 class TextComponent : public Component
 {
 public:
+    TextComponent();
+
     std::string toString() const;
     void init(const pugi::xml_node& xml);
     
@@ -15,7 +26,8 @@ public:
     void setText(const std::string& value);
 
 private:
-    std::string m_text;
+    std::shared_ptr<sf::Text> m_text;
+    sf::Font m_font;
 };
 
 }

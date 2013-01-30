@@ -19,7 +19,7 @@ public:
 
 	void init(const pugi::xml_node& xml);
 	std::string toString() const;
-	sf::Sprite sprite() const;
+    std::shared_ptr<sf::Sprite> sprite() const;
 
 	void setTexture(const std::string& id);
 	void setSpriteCoordX(int value);
@@ -29,7 +29,7 @@ private:
 	void updateTexRectangle();
 
 private:
-	sf::Sprite m_sprite;
+    std::shared_ptr<sf::Sprite> m_sprite;
 	std::shared_ptr<sf::Texture> m_texture;
 	int m_sprite_coord_x, m_sprite_coord_y;
 };

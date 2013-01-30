@@ -13,11 +13,12 @@
 #include "components/animationframescomponent.h"
 #include "components/textcomponent.h"
 #include "components/fontcomponent.h"
+#include "components/drawablecomponent.h"
+
 #include "systems/velocitysystem.h"
 #include "systems/keyboardinputsystem.h"
-#include "systems/renderablesystem.h"
+#include "systems/rendersystem.h"
 #include "systems/spriteanimationsystem.h"
-#include "systems/textrendersystem.h"
 
 namespace pugi
 {

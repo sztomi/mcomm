@@ -1,11 +1,14 @@
 #pragma once
 
-#include "simulation/system.h"
+#include "SFML/Graphics/Sprite.hpp"
+
+#include "../system.h"
+
 
 namespace mcomm
 {
 
-class TextRenderSystem : public System
+class RenderSystem : public System
 {
 public:
 	std::string toString() const;

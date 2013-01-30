@@ -22,6 +22,7 @@ namespace ComponentFactory
 			REGISTER_COMPONENT(AnimationFrames)
             REGISTER_COMPONENT(Text)
             REGISTER_COMPONENT(Font)
+            REGISTER_COMPONENT(Drawable)
 		END_MAP
 		
         std::cerr << "Unregistered component: " << type << std::endl;
@@ -36,9 +37,8 @@ namespace SystemFactory
 		BEGIN_MAP
 			REGISTER_SYSTEM(Velocity)
 			REGISTER_SYSTEM(KeyboardInput)
-			REGISTER_SYSTEM(Renderable)
+			REGISTER_SYSTEM(Render)
 			REGISTER_SYSTEM(SpriteAnimation)
-            REGISTER_SYSTEM(TextRender)
 		END_MAP
 		
         std::cerr << "Unregistered system: " << type << std::endl;
