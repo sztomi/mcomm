@@ -5,15 +5,15 @@ from clang_helpers import PrepareClangFlags
 # These are the compilation flags that will be used in case there's no
 # compilation database set.
 flags = [
-'-DNDEBUG',
-'-DUSE_CLANG_COMPLETER',
 '-std=c++11',
 '-x',
 'c++',
 '-I',
 '.',
-'-Isrc/3rdparty/include',
-'-Isrc'
+'-I',
+'./src/3rdparty/include',
+'-I',
+'./src'
 ]
 
 def DirectoryOfThisScript():
@@ -26,32 +26,33 @@ def MakeRelativePathsInFlagsAbsolute( flags, working_directory ):
     new_flags = []
     make_next_absolute = False
     path_flags = [ '-isystem', '-I', '-iquote', '--sysroot=' ]
+
     for flag in flags:
         new_flag = flag
 
-    if make_next_absolute:
-        make_next_absolute = False
-    if not flag.startswith( '/' ):
-        new_flag = os.path.join( working_directory, flag )
+        if make_next_absolute:
+            make_next_absolute = False
+            if not flag.startswith( '/' ):
+                new_flag = os.path.join( working_directory, flag )
 
-    for path_flag in path_flags:
-        if flag == path_flag:
-            make_next_absolute = True
-            break
+        for path_flag in path_flags:
+            if flag == path_flag:
+                make_next_absolute = True
+                break
+            if flag.startswith( path_flag ):
+                path = flag[ len( path_flag ): ]
+                new_flag = path_flag + os.path.join( working_directory, path )
+                break
+        if new_flag:
+            new_flags.append( new_flag )
 
-        if flag.startswith( path_flag ):
-            path = flag[ len( path_flag ): ]
-            new_flag = path_flag + os.path.join( working_directory, path )
-            break
-
-    if new_flag:
-        new_flags.append( new_flag )
     return new_flags
 
 
 def FlagsForFile( filename ):
     relative_to = DirectoryOfThisScript()
     final_flags = MakeRelativePathsInFlagsAbsolute( flags, relative_to )
+    print final_flags
 
     return {
         'flags': final_flags,
