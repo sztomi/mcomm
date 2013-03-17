@@ -3,3 +3,4 @@ obj
 *.make
 Makefile
 nohup.out
+*.pyc

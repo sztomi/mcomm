@@ -9,6 +9,12 @@
                     <Y>0</Y>
                 </Sprite>
             </Drawable>
+            <BoundingBox>
+                <X>0</X>
+                <Y>0</Y>
+                <Width>32</Width>
+                <Height>32</Height>
+            </BoundingBox>
 			<Transform>
 				<Scale>
 					<X>2.0</X>
@@ -23,7 +29,7 @@
 					<Y>200.0</Y>
 				</Position>
 			</Transform>
-			<Speed>
+           	<Speed>
 				<X>60.0</X>
 				<Y>60.0</Y>
 			</Speed>

@@ -52,7 +52,6 @@ def MakeRelativePathsInFlagsAbsolute( flags, working_directory ):
 def FlagsForFile( filename ):
     relative_to = DirectoryOfThisScript()
     final_flags = MakeRelativePathsInFlagsAbsolute( flags, relative_to )
-    print final_flags
 
     return {
         'flags': final_flags,

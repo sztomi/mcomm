@@ -23,6 +23,7 @@ namespace ComponentFactory
             REGISTER_COMPONENT(Text)
             REGISTER_COMPONENT(Font)
             REGISTER_COMPONENT(Drawable)
+            REGISTER_COMPONENT(BoundingBox)
 		END_MAP
 		
         std::cerr << "Unregistered component: " << type << std::endl;

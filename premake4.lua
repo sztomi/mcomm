@@ -21,5 +21,5 @@ solution "mcomm"
 		kind "ConsoleApp"
 		files { "./src/**.h", "./src/**.cc", "./src/**.cpp" }
 		includedirs { "./src", "./src/3rdparty/include" }
-		buildoptions { "-std=c++0x" }
+		buildoptions { "-std=c++11" }
 		links { "sfml-system", "sfml-window", "sfml-graphics", "boost_iostreams" }

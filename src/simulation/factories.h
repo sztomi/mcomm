@@ -14,6 +14,7 @@
 #include "components/textcomponent.h"
 #include "components/fontcomponent.h"
 #include "components/drawablecomponent.h"
+#include "components/boundingboxcomponent.h"
 
 #include "systems/velocitysystem.h"
 #include "systems/keyboardinputsystem.h"
