@@ -7,6 +7,7 @@
 
 #include "game.h"
 #include "media/texturemanager.h"
+#include "simulation/collisiongrid.h"
 #include "simulation/entity.h"
 #include "simulation/factories.h"
 
@@ -59,6 +60,8 @@ void Game::run()
 void Game::runStep(float frameTime)
 {
 	const float timeStep = 0.1f;
+
+    CollisionGrid::instance().clearAll();
 
 	while (frameTime > 0.0f)
 	{

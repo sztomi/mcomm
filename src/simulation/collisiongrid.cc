@@ -8,6 +8,7 @@ namespace mcomm
 
 void CollisionGrid::registerEntity(std::shared_ptr<Entity> &entity)
 {
+    std::cout << "Registering " << entity->toString();
     m_map.insert(std::make_pair(gridPositionOf(entity), entity));
 }
 

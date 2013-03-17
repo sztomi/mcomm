@@ -40,6 +40,7 @@ namespace SystemFactory
 			REGISTER_SYSTEM(KeyboardInput)
 			REGISTER_SYSTEM(Render)
 			REGISTER_SYSTEM(SpriteAnimation)
+            REGISTER_SYSTEM(Colliding)
 		END_MAP
 		
         std::cerr << "Unregistered system: " << type << std::endl;

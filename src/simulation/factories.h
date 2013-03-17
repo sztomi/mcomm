@@ -20,6 +20,7 @@
 #include "systems/keyboardinputsystem.h"
 #include "systems/rendersystem.h"
 #include "systems/spriteanimationsystem.h"
+#include "systems/collidingsystem.h"
 
 namespace pugi
 {
