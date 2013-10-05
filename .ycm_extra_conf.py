@@ -6,14 +6,14 @@ from clang_helpers import PrepareClangFlags
 # compilation database set.
 flags = [
 '-std=c++11',
+'-stdlib=libc++',
 '-x',
 'c++',
-'-I',
-'.',
-'-I',
-'./src/3rdparty/include',
-'-I',
-'./src'
+'-I.',
+'-I./src/3rdparty/include',
+'-I./src',
+'-I./test',
+'-I./test/include'
 ]
 
 def DirectoryOfThisScript():
