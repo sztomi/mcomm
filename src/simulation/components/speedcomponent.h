@@ -2,25 +2,28 @@
 
 #include "simulation/component.h"
 
+class lua_State;
+
 namespace mcomm
 {
 
 class SpeedComponent : public Component
 {
 public:
-	SpeedComponent();
+    SpeedComponent();
 
-	void init(const pugi::xml_node& xml);
-	std::string toString() const;
+    std::string name() const;
+    void loadJson(const jsonxx::Object& o);
+    jsonxx::Object toJson() const;
+    static void luabind(lua_State* L);
 
-	float x() const;
-	float y() const;
-
-	void setX(float value);
-	void setY(float value);
+    float x() const;
+    void setX(float value);
+    float y() const;
+    void setY(float value);
 
 private:
-	float m_x, m_y;
+    float m_x, m_y;
 };
 
 }

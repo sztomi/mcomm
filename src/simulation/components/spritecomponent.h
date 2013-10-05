@@ -6,7 +6,7 @@
 
 namespace sf
 {
-	class Texture;
+    class Texture;
 }
 
 namespace mcomm
@@ -15,23 +15,29 @@ namespace mcomm
 class SpriteComponent : public Component
 {
 public:
-	SpriteComponent();
+    SpriteComponent();
 
-	void init(const pugi::xml_node& xml);
-	std::string toString() const;
+    std::string name() const;
+    void loadJson(const jsonxx::Object& o);
+    jsonxx::Object toJson() const;
+
     std::shared_ptr<sf::Sprite> sprite() const;
 
-	void setTexture(const std::string& id);
-	void setSpriteCoordX(int value);
-	void setSpriteCoordY(int value);
+    std::string textureId() const;
+    void setTextureId(const std::string& id);
+    int spriteCoordX() const;
+    void setSpriteCoordX(int value);
+    int spriteCoordY() const;
+    void setSpriteCoordY(int value);
 
 private:
-	void updateTexRectangle();
+    void updateTexRectangle();
 
 private:
     std::shared_ptr<sf::Sprite> m_sprite;
-	std::shared_ptr<sf::Texture> m_texture;
-	int m_sprite_coord_x, m_sprite_coord_y;
+    std::shared_ptr<sf::Texture> m_texture;
+    std::string m_texture_id;
+    int m_sprite_coord_x, m_sprite_coord_y;
 };
 
 }

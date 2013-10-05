@@ -1,66 +1,104 @@
 #include "SFML/Graphics/Rect.hpp"
-#include "pugixml.hpp"
+#include "jsonxx.h"
 
-#include "spritecomponent.h"
 #include "drawablecomponent.h"
 #include "media/texturemanager.h"
+#include "spritecomponent.h"
+
+using namespace jsonxx;
 
 namespace mcomm
 {
 
 SpriteComponent::SpriteComponent()
-	: m_sprite(), m_texture(), m_sprite_coord_x(0), m_sprite_coord_y(0)
+    : m_sprite(), 
+      m_texture(),
+      m_sprite_coord_x(0),
+      m_sprite_coord_y(0)
 {
     m_sprite = std::make_shared<sf::Sprite>();
 }
 
-std::string SpriteComponent::toString() const
+std::string SpriteComponent::name() const
 {
-	return "SpriteComponent";
+    return "SpriteComponent";
 }
 
-void SpriteComponent::init(const pugi::xml_node& xml)
+void SpriteComponent::loadJson(const Object& o)
 {
-	setTexture(xml.child("Texture").text().as_string());
-	setSpriteCoordX(xml.child("X").text().as_int());
-	setSpriteCoordY(xml.child("Y").text().as_int());
+    setTextureId(o.get<String>("texture_id"));
+    setSpriteCoordX(static_cast<int>(o.get<Number>("x")));
+    setSpriteCoordY(static_cast<int>(o.get<Number>("y")));
 
-    m_parent->COMPONENT(Drawable)->setDrawable(m_sprite);
+    //m_parent->COMPONENT(Drawable)->setDrawable(m_sprite);
+}
+
+Object SpriteComponent::toJson() const
+{
+    Object result;
+
+    result << "texture_id" << m_texture_id;
+    result << "x" << m_sprite_coord_x;
+    result << "y" << m_sprite_coord_y;
+
+    return result;
 }
 
 std::shared_ptr<sf::Sprite> SpriteComponent::sprite() const
 {
-	return m_sprite;
+    return m_sprite;
 }
 
-void SpriteComponent::setTexture(const std::string& id)
+std::string SpriteComponent::textureId() const
 {
-	m_texture = TextureManager::instance().texture(id);
-	m_sprite->setTexture(*m_texture.get());
+    return m_texture_id;
+}
+
+void SpriteComponent::setTextureId(const std::string& id)
+{
+    m_texture_id = id;
+
+    m_texture = TextureManager::instance().texture(id);
+    DLOG_IF(ERROR, m_texture.get() == nullptr)
+        << "Could not find texture by id "
+        << id;
+
+    if (m_texture.get() != nullptr)
+        m_sprite->setTexture(*m_texture.get());
+}
+
+int SpriteComponent::spriteCoordX() const 
+{
+    return m_sprite_coord_x;
 }
 
 void SpriteComponent::setSpriteCoordX(int value)
 {
-	m_sprite_coord_x = value;
-	updateTexRectangle();
+    m_sprite_coord_x = value;
+    updateTexRectangle();
+}
+
+int SpriteComponent::spriteCoordY() const
+{
+    return m_sprite_coord_y;
 }
 
 void SpriteComponent::setSpriteCoordY(int value)
 {
-	m_sprite_coord_y = value;
-	updateTexRectangle();
+    m_sprite_coord_y = value;
+    updateTexRectangle();
 }
 
 void SpriteComponent::updateTexRectangle()
 {
-	const int sprite_size_x = 32;
-	const int sprite_size_y = 32;
-	int x = sprite_size_x * m_sprite_coord_x;
-	int y = sprite_size_y * m_sprite_coord_y;
+    const int sprite_size_x = 32;
+    const int sprite_size_y = 32;
+    int x = sprite_size_x * m_sprite_coord_x;
+    int y = sprite_size_y * m_sprite_coord_y;
 
-	m_sprite->setTextureRect(
-		sf::IntRect(x, y, sprite_size_x, sprite_size_y)
-	);
+    m_sprite->setTextureRect(
+            sf::IntRect(x, y, sprite_size_x, sprite_size_y)
+            );
 }
 
 }

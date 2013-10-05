@@ -1,42 +1,65 @@
-#include "pugixml.hpp"
 #include "transformcomponent.h"
+#include "jsonxx.h"
+
+using namespace jsonxx;
 
 namespace mcomm 
 {
 
-std::string TransformComponent::toString() const
+std::string TransformComponent::name() const
 {
-	return "TransformComponent";
+    return "TransformComponent";
 }
 
-void TransformComponent::init(const pugi::xml_node& xml)
+void TransformComponent::loadJson(const Object& o)
 {
-	auto node_scale = xml.child("Scale");
-	if (!node_scale.empty())
-	{
-		float sx = node_scale.child("X").text().as_float();
-		float sy = node_scale.child("Y").text().as_float();
-		setScale(sx, sy);
-	}
+    auto scale = o.get<Object>("scale");
 
-	auto node_origin = xml.child("Origin");
-	if (!node_origin.empty())
-	{
-		float sx = node_origin.child("X").text().as_float();
-		float sy = node_origin.child("Y").text().as_float();
-		setOrigin(sx, sy);
-	}
+    if (!scale.empty())
+    {
+        auto sx = scale.get<Number>("x");
+        auto sy = scale.get<Number>("y");
+        setScale(static_cast<float>(sx), static_cast<float>(sy));
+    }
 
-	auto node_position = xml.child("Position");
+    auto origin = o.get<Object>("origin");
+    if (!origin.empty())
+    {
+        auto sx = origin.get<Number>("x");
+        auto sy = origin.get<Number>("y");
+        setOrigin(static_cast<float>(sx), static_cast<float>(sy));
+    }
 
-	if (!node_position.empty())
-	{
-		float sx = node_position.child("X").text().as_float();
-		float sy = node_position.child("Y").text().as_float();
-		setPosition(sx, sy);
-	}
+    auto position = o.get<Object>("position");
 
-	// TODO: more properties, more error handling.
+    if (!position.empty())
+    {
+        auto sx = position.get<Number>("x");
+        auto sy = position.get<Number>("y");
+        setPosition(static_cast<float>(sx), static_cast<float>(sy));
+    }
+}
+
+Object TransformComponent::toJson() const
+{
+    Object result;
+
+    Object scale;
+    scale << "x" << getScale().x;
+    scale << "y" << getScale().y;
+    result << "scale" << scale;
+
+    Object position;
+    position << "x" << getPosition().x;
+    position << "y" << getPosition().y;
+    result << "position" << position;
+
+    Object origin;
+    origin << "x" << getOrigin().x;
+    origin << "y" << getOrigin().y;
+    result << "origin" << origin;
+
+    return result;
 }
 
 }

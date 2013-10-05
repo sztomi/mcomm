@@ -7,12 +7,13 @@
 namespace mcomm
 {
 
-class TransformComponent : public Component,
-						   public sf::Transformable
+class TransformComponent : public Component, public sf::Transformable
 {
 public:
-	std::string toString() const;
-	void init(const pugi::xml_node& xml);	
+    std::string name() const;
+    void loadJson(const jsonxx::Object& o);
+    jsonxx::Object toJson() const;
+
 };
 
 }
