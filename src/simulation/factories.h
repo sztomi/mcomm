@@ -1,58 +1,79 @@
 #pragma once
 
+#include <functional>
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 #include "entity.h"
 #include "component.h"
 #include "system.h"
 
-#include "components/transformcomponent.h"
-#include "components/spritecomponent.h"
-#include "components/speedcomponent.h"
-#include "components/animationframescomponent.h"
-#include "components/textcomponent.h"
-#include "components/fontcomponent.h"
-#include "components/drawablecomponent.h"
-#include "components/boundingboxcomponent.h"
-
-#include "systems/velocitysystem.h"
-#include "systems/keyboardinputsystem.h"
-#include "systems/rendersystem.h"
-#include "systems/spriteanimationsystem.h"
-#include "systems/collidingsystem.h"
-
-namespace pugi
-{
-	class xml_node;
-}
+#define REGISTER_COMPONENT(c) static RegisterComponent<c> m___GENERATED___comp_reg_##c(#c);
+#define REGISTER_SYSTEM(c) static RegisterSystem<c> m___GENERATED___sys_reg##c(#c);
 
 namespace mcomm
 {
-	namespace ComponentFactory
-	{
-		std::shared_ptr<Component> create(const std::string& type);
-	}
 
-	namespace SystemFactory
-	{
-		std::shared_ptr<System> create(const std::string& type);
-	}
+class ComponentFactory
+{
+public:
+    typedef std::function<std::shared_ptr<Component>(void)> CompFactoryFunc;
 
-	class EntityFactory
-	{
-	public:
-		static EntityFactory& instance()
-		{
-			static EntityFactory inst;
-			return inst;
-		}
+    static ComponentFactory& instance();
+    void register_class(const std::string& name, CompFactoryFunc& create_func);
+    std::shared_ptr<Component> create(const std::string& type);
 
-		std::shared_ptr<Entity> createNew(const std::string& name);
-		std::shared_ptr<Entity> createNew(const std::string& name, const pugi::xml_node& xml);
+private:
+    std::unordered_map<std::string, CompFactoryFunc> m_functions;
+};
 
-	private:
-		EntityFactory() : m_ids(0) {}
-		int m_ids;
-	};
+template<class T>
+class RegisterComponent
+{
+    RegisterComponent(const std::string& name)
+    {
+        ComponentFactory::instance().register_class(name, 
+                []() -> std::shared_ptr<Component> { return std::make_shared<T>(); });
+        // TODO: luabind?
+    }
+};
+
+template<class T>
+class RegisterSystem
+{
+    RegisterSystem(const std::string& name)
+    {
+        SystemFactory::instance().register_class(name, 
+                []() -> std::shared_ptr<System> { return std::make_shared<T>(); });
+        // TODO: luabind?
+    }
+};
+
+class SystemFactory
+{
+public:
+    typedef std::function<std::shared_ptr<System>(void)> SysFactoryFunc;
+
+    static SystemFactory& instance();
+    void register_class(const std::string& name, SysFactoryFunc& create_func);
+    std::shared_ptr<System> create(const std::string& type);
+
+private:
+    std::unordered_map<std::string, SysFactoryFunc> m_functions;
+};
+
+class EntityFactory
+{
+public:
+    static EntityFactory& instance();
+
+    std::shared_ptr<Entity> createNew(const std::string& name);
+    std::shared_ptr<Entity> createNew(const std::string& name, const jsonxx::Object& o);
+
+private:
+    EntityFactory() : m_ids(0) {}
+    int m_ids;
+};
+
 }

@@ -3,7 +3,19 @@
 
 solution "mcomm"
     language "C++"
-    libdirs "./src/3rdparty/lib"
+    includedirs { "./src", "./src/3rdparty/include", "./src/3rdparty/include/lua" }
+    libdirs { "./src/3rdparty/lib" }
+    links 
+    {
+        "sfml-system",
+        "sfml-window",
+        "sfml-graphics",
+        "boost_iostreams",
+        "glog",
+        "lua"
+    }
+    buildoptions { "-std=c++11" }
+
     configurations { "debug", "release" }
 
     configuration "debug"
@@ -21,23 +33,21 @@ solution "mcomm"
     project "mcomm"
         kind "ConsoleApp"
         files { "./src/**.h", "./src/**.cc", "./src/**.cpp" }
-        includedirs { "./src", "./src/3rdparty/include" }
-        buildoptions { "-std=c++11" }
-        links { "sfml-system", "sfml-window", "sfml-graphics", "boost_iostreams", "glog" }
 
     project "test"
         kind "ConsoleApp"
-        files { 
-                "./src/3rdparty/src/jsonxx.cc",
-                "./src/simulation/components/transformcomponent.cc",
-                "./src/simulation/components/textcomponent.cc",
-                "./src/simulation/components/spritecomponent.cc",
-                "./src/media/texturemanager.cc",
-                "./src/3rdparty/**.cc",
-                "./src/3rdparty/**.h",
-                "./test/**.cc", "./test/**.h" 
+        files 
+        { 
+            "./src/3rdparty/src/jsonxx.cc",
+            "./src/simulation/components/transformcomponent.cc",
+            "./src/simulation/components/textcomponent.cc",
+            "./src/simulation/components/spritecomponent.cc",
+            "./src/media/texturemanager.cc",
+            "./src/3rdparty/**.cc",
+            "./src/3rdparty/**.h",
+            "./test/**.cc", "./test/**.h" 
         }
-        includedirs { "./src", "./src/3rdparty/include", "./test/include" }
+
+        includedirs { "./test/include" }
         libdirs { "./test/lib" }
-        buildoptions { "-std=c++11" }
-        links { "sfml-system", "sfml-window", "sfml-graphics", "boost_iostreams", "gtest", "glog" }
+        links "gtest"

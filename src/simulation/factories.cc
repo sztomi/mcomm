@@ -1,76 +1,100 @@
 #include <iostream>
 
-#include "factories.h"
-#include "pugixml.hpp"
+#include "jsonxx.h"
+#include "glog/logging.h"
 
-#define BEGIN_MAP if (false) {}
-#define REGISTER_COMPONENT(tname) else if (type == #tname) { return std::make_shared<tname##Component>(); }
-#define REGISTER_SYSTEM(tname) else if (type == #tname) { return std::make_shared<tname##System>(); }
-#define END_MAP // just for completeness' sake :)
+#include "factories.h"
+
+using namespace jsonxx;
 
 namespace mcomm
 {
 
-namespace ComponentFactory
+ComponentFactory& ComponentFactory::instance()
 {
-	std::shared_ptr<Component> create(const std::string& type)
-	{
-		BEGIN_MAP
-			REGISTER_COMPONENT(Transform)
-			REGISTER_COMPONENT(Sprite)
-			REGISTER_COMPONENT(Speed)
-			REGISTER_COMPONENT(AnimationFrames)
-            REGISTER_COMPONENT(Text)
-            REGISTER_COMPONENT(Font)
-            REGISTER_COMPONENT(Drawable)
-            REGISTER_COMPONENT(BoundingBox)
-		END_MAP
-		
-        std::cerr << "Unregistered component: " << type << std::endl;
-        return std::shared_ptr<Component>();
-	}
+    static ComponentFactory inst;
+    return inst;
 }
 
-namespace SystemFactory
+void ComponentFactory::register_class(const std::string& name, CompFactoryFunc& create_func)
 {
-	std::shared_ptr<System> create(const std::string& type)
-	{
-		BEGIN_MAP
-			REGISTER_SYSTEM(Velocity)
-			REGISTER_SYSTEM(KeyboardInput)
-			REGISTER_SYSTEM(Render)
-			REGISTER_SYSTEM(SpriteAnimation)
-            REGISTER_SYSTEM(Colliding)
-		END_MAP
-		
-        std::cerr << "Unregistered system: " << type << std::endl;
+    m_functions[name] = create_func;
+}
+
+std::shared_ptr<Component> ComponentFactory::create(const std::string& type)
+{
+    auto func = m_functions.find(type);
+
+    if (func == std::end(m_functions))
+    {
+        LOG(ERROR) << "Unregistered component: " << type << std::endl; 
+        return std::shared_ptr<Component>();
+    }
+
+    return func->second();
+}
+
+SystemFactory& SystemFactory::instance()
+{
+    static SystemFactory inst;
+    return inst;
+}
+
+void SystemFactory::register_class(const std::string& name, SysFactoryFunc& create_func)
+{
+    m_functions[name] = create_func;
+}
+
+std::shared_ptr<System> SystemFactory::create(const std::string& type)
+{
+    auto func = m_functions.find(type);
+
+    if (func == std::end(m_functions))
+    {
+        LOG(ERROR) << "Unregistered component: " << type << std::endl; 
         return std::shared_ptr<System>();
-	}
+    }
+
+    return func->second();
 }
 
 std::shared_ptr<Entity> EntityFactory::createNew(const std::string& name)
 {
-	return std::make_shared<Entity>(m_ids++, name);
+    return std::make_shared<Entity>(m_ids++, name);
 }
 
-std::shared_ptr<Entity> EntityFactory::createNew(const std::string& name, const pugi::xml_node& xml)
+EntityFactory& EntityFactory::instance()
 {
-	auto entity = createNew(name);
-	auto components = xml.child("Components");
+    static EntityFactory inst;
+    return inst;
+}
 
-	for (auto& c : components.children())
-	{
-		entity->attachComponent(c.name())->init(c);
-	}
+std::shared_ptr<Entity> EntityFactory::createNew(const std::string& name, const Object& o)
+{
+    auto entity = createNew(name);
+    auto components = o.get<Array>("components");
 
-	auto systems = xml.child("Systems");
+    for (size_t i = 0; 
+         i < components.size();
+         ++i)
+    {
+        auto c = components.get<Object>(i);
+        auto name = c.get<String>("name");
+        entity->attachComponent(name)->loadJson(c);
+    }
 
-	for (auto& s : systems.children())
-	{
-		entity->attachSystem(s.name())->init(s);
-	}
+    auto systems = o.get<Array>("systems");
+    
+    for (size_t i = 0; 
+         i < systems.size();
+         ++i)
+    {
+        auto s = systems.get<Object>(i);
+        auto name = s.get<String>("name");
+        entity->attachSystem(name)->loadJson(s);
+    }
 
-	return entity;
+    return entity;
 }
 
 }

@@ -1,11 +1,16 @@
 #include "SFML/Graphics/Rect.hpp"
 #include "jsonxx.h"
+#include "glog/logging.h"
 
 #include "drawablecomponent.h"
 #include "media/texturemanager.h"
 #include "spritecomponent.h"
 
+#include "lua.hpp"
+#include "lualite.hpp"
+
 using namespace jsonxx;
+using namespace lualite;
 
 namespace mcomm
 {
@@ -101,4 +106,18 @@ void SpriteComponent::updateTexRectangle()
             );
 }
 
+void SpriteComponent::luabind(lua_State* L)
+{
+    module(L,
+        class_<SpriteComponent>("SpriteComponent")
+            .constructor("new")
+            .def("name", &SpriteComponent::name)
+            .property("textureId", &SpriteComponent::textureId, &SpriteComponent::setTextureId)
+            .property("spriteCoordX", &SpriteComponent::spriteCoordX, &SpriteComponent::setSpriteCoordX)
+            .property("spriteCoordY", &SpriteComponent::spriteCoordY, &SpriteComponent::setSpriteCoordY)
+    );
 }
+
+}
+
+

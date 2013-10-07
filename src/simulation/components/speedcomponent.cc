@@ -1,15 +1,11 @@
 #include "speedcomponent.h"
 #include "jsonxx.h"
 
-extern "C" 
-{
-#include "lua5.2/lua.h"
-}
-
-#include <luabind/luabind.hpp>
+#include "lua.hpp"
+#include "lualite.hpp"
 
 using namespace jsonxx;
-using namespace luabind;
+using namespace lualite;
 
 namespace mcomm
 {
@@ -60,15 +56,15 @@ void SpeedComponent::setY(float value)
     m_y = value;
 }
 
-static void SpeedComponent::luabind(lua_State* L)
+void SpeedComponent::luabind(lua_State* L)
 {
-    open(L);
-    module(L)
-    [
+    module(L,
         class_<SpeedComponent>("SpeedComponent")
-            .property("x", &SpeedComponent::getX, &SpeedComponent::setX)
-            .property("y", &SpeedComponent::getY, &SpeedComponent::setY)
-    ];
+            .constructor("new")
+            .def("name", &SpeedComponent::name)
+            .property("x", &SpeedComponent::x, &SpeedComponent::setX)
+            .property("y", &SpeedComponent::y, &SpeedComponent::setY)
+    );
 }
 
 }

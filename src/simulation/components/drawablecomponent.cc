@@ -1,8 +1,19 @@
 #include <boost/format.hpp>
 
-#include "pugixml.hpp"
+#include "jsonxx.h"
+
 #include "simulation/components/drawablecomponent.h"
 #include "simulation/factories.h"
+
+extern "C" 
+{
+#include "lua5.1/lua.h"
+}
+
+#include <luabind/luabind.hpp>
+
+using namespace jsonxx;
+using namespace luabind;
 
 namespace mcomm
 {
@@ -12,15 +23,19 @@ DrawableComponent::DrawableComponent()
 {
 }
 
-std::string DrawableComponent::toString() const
+std::string DrawableComponent::name() const
 {
     return boost::str(boost::format("DrawableComponent [%1%]") % m_kind);
 }
 
-void DrawableComponent::init(const pugi::xml_node &xml)
+void DrawableComponent::loadJson(const Object& o)
 {
-    m_parent->attachComponent(xml.first_child().name())->init(xml.first_child());
 } 
+
+Object DrawableComponent::toJson() const
+{
+    return Object();
+}
 
 std::shared_ptr<sf::Drawable> DrawableComponent::drawable() const
 {
@@ -30,6 +45,16 @@ std::shared_ptr<sf::Drawable> DrawableComponent::drawable() const
 void DrawableComponent::setDrawable(const std::shared_ptr<sf::Drawable> &value)
 {
     m_drawable = value;
+}
+
+void DrawableComponent::luabind(lua_State* L)
+{
+    open(L);
+    module(L)
+    [
+        class_<DrawableComponent>("DrawableComponent")
+            .def("name", &DrawableComponent::name)
+    ];
 }
 
 }

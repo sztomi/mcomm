@@ -9,6 +9,9 @@ namespace sf
     class Texture;
 }
 
+class lua_State;
+
+
 namespace mcomm
 {
 
@@ -20,6 +23,7 @@ public:
     std::string name() const;
     void loadJson(const jsonxx::Object& o);
     jsonxx::Object toJson() const;
+    static void luabind(lua_State* L);
 
     std::shared_ptr<sf::Sprite> sprite() const;
 

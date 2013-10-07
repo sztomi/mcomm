@@ -10,11 +10,6 @@
 #define COMPONENT(c) component<c##Component>(#c)
 #define SYSTEM(s) system<s##System>(#s)
 
-namespace pugi
-{
-    class xml_node;
-}
-
 namespace jsonxx
 {
     class Object;
@@ -33,7 +28,6 @@ public:
     virtual std::string name() const = 0;
     virtual void loadJson(const jsonxx::Object& o) {}
     virtual jsonxx::Object toJson() const = 0;
-    static void luabind();
 
 protected:
 	std::shared_ptr<Entity> m_parent;

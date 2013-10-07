@@ -4,7 +4,11 @@
 #include "drawablecomponent.h"
 #include "textcomponent.h"
 
+#include "lua.hpp"
+#include "lualite.hpp"
+
 using namespace jsonxx;
+using namespace lualite;
 
 namespace mcomm
 {
@@ -76,6 +80,17 @@ void TextComponent::setFontFileName(const std::string& value)
     m_fontFilename = value;
     m_font.loadFromFile(value);
     m_text->setFont(m_font);
+}
+
+void TextComponent::luabind(lua_State* L)
+{
+    module(L,
+        class_<TextComponent>("TextComponent")
+            .def("name", &TextComponent::name)
+            .property("text", &TextComponent::text, &TextComponent::setText)
+            .property("size", &TextComponent::size, &TextComponent::setSize)
+            .property("fontFileName", &TextComponent::fontFileName, &TextComponent::setFontFileName)
+    );
 }
 
 }

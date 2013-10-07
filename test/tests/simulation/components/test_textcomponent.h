@@ -1,5 +1,6 @@
 #pragma once
 #include "gtest/gtest.h"
+#include "lua.hpp"
 
 #include "jsonxx.h"
 #include "simulation/components/textcomponent.h"
@@ -24,3 +25,4 @@ TEST(TextComponent, serialize)
     EXPECT_EQ(t.size(), t2.size());
     EXPECT_EQ(t.fontFileName(), t2.fontFileName());
 }
+

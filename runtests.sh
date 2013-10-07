@@ -1,1 +1,1 @@
-premake4 gmake && make clean && make test && ./build/debug/test
+premake4 gmake && make test && ./build/debug/test
