@@ -60,6 +60,8 @@ extern "C" {
 
 }
 
+#include "reflection/typeids.h"
+
 namespace lualite
 {
 
@@ -154,12 +156,16 @@ struct func_info_type
 
   lua_CFunction callback;
 
+  unsigned int return_type_id;
+
   void* func;
 };
 
 struct map_member_info_type
 {
   lua_CFunction callback;
+
+  unsigned int return_type_id;
 
   member_func_type func;
 };
@@ -169,6 +175,8 @@ struct member_info_type
   char const* name;
 
   lua_CFunction callback;
+
+  unsigned int return_type_id;
 
   member_func_type func;
 };
@@ -1041,6 +1049,13 @@ constexpr inline C* forward(lua_State* const L, indices<I...> const)
   return new C(get_arg<I + O, A>(L)...);
 }
 
+template <class C>
+void push_instance(lua_State* L, C* instance, const std::string& name)
+{
+    create_wrapper_table(L, instance);
+    lua_setglobal(L, name.c_str());
+}
+
 template <std::size_t O, class C, class ...A>
 int constructor_stub(lua_State* const L)
 {
@@ -1284,10 +1299,10 @@ public:
   template <class R, class ...A>
   scope& def(char const* const name, R (* const ptr_to_func)(A...))
   {
-    address_pool_.push_front(convert(ptr_to_func));
+    address_pool_().push_front(convert(ptr_to_func));
 
     functions_.push_back(detail::func_info_type{
-      name, detail::func_stub<1, R, A...>, &address_pool_.front() });
+      name, detail::func_stub<1, R, A...>, mcomm::TypeID<R>::value, &address_pool_().front() });
 
     return *this;
   }
@@ -1437,7 +1452,11 @@ protected:
   }
 
 protected:
-  static std::forward_list<detail::func_type> address_pool_;
+  static std::forward_list<detail::func_type>& address_pool_()
+  {
+      static std::forward_list<lualite::detail::func_type> inst_address_pool_;
+      return inst_address_pool_;
+  }
 
   std::vector<detail::func_info_type> functions_;
 
@@ -1481,14 +1500,14 @@ public:
   template <class R, class ...A>
   module& def(char const* const name, R (* const ptr_to_func)(A...))
   {
-    address_pool_.push_front(convert(ptr_to_func));
+    address_pool_().push_front(convert(ptr_to_func));
 
     if (name_)
     {
       scope::get_scope(L_);
       assert(lua_istable(L_, -1));
 
-      lua_pushlightuserdata(L_, &address_pool_.front());
+      lua_pushlightuserdata(L_, &address_pool_().front());
       lua_pushcclosure(L_, (detail::func_stub<1, R, A...>), 1);
 
       detail::rawsetfield(L_, -2, name);
@@ -1497,7 +1516,7 @@ public:
     }
     else
     {
-      lua_pushlightuserdata(L_, &address_pool_.front());
+      lua_pushlightuserdata(L_, &address_pool_().front());
       lua_pushcclosure(L_, (detail::func_stub<1, R, A...>), 1);
 
       lua_setglobal(L_, name);
@@ -1641,7 +1660,7 @@ public:
     R (C::* const ptr_to_const_member)(A...) const)
   {
     getters_.emplace(name, detail::map_member_info_type{
-      detail::member_stub<3, C, R, A...>, convert(ptr_to_const_member)});
+      detail::member_stub<3, C, R, A...>, mcomm::TypeID<R>::value, convert(ptr_to_const_member)});
 
     return *this;
   }
@@ -1651,7 +1670,7 @@ public:
     R (C::* const ptr_to_member)(A...))
   {
     getters_.emplace(name, detail::map_member_info_type{
-      detail::member_stub<3, C, R, A...>, convert(ptr_to_member)});
+      detail::member_stub<3, C, R, A...>, mcomm::TypeID<R>::value, convert(ptr_to_member)});
 
     return *this;
   }
@@ -1662,9 +1681,9 @@ public:
     RB (C::* const ptr_to_memberb)(B...))
   {
     getters_.emplace(name, detail::map_member_info_type{
-      detail::member_stub<3, C, RA, A...>, convert(ptr_to_membera)});
+      detail::member_stub<3, C, RA, A...>, mcomm::TypeID<RA>::value, convert(ptr_to_membera)});
     setters_.emplace(name, detail::map_member_info_type{
-      detail::member_stub<3, C, RB, B...>, convert(ptr_to_memberb)});
+      detail::member_stub<3, C, RB, B...>, mcomm::TypeID<RB>::value, convert(ptr_to_memberb)});
 
     return *this;
   }
@@ -1682,37 +1701,48 @@ public:
     return *this;
   }
 
-  std::unordered_map<std::string, detail::member_func_type> getters() const
+  std::unordered_map<std::string, detail::map_member_info_type> getters() const
   {
-      std::unordered_map<std::string, detail::member_func_type> result;
+      std::unordered_map<std::string, detail::map_member_info_type> result;
       for (auto const& it : getters_)
       {
-          result.emplace(std::make_pair(it.first, it.second.func));
+          result.emplace(std::make_pair(it.first, it.second));
       }
 
       return result;
   }
 
-  std::unordered_map<std::string, detail::member_func_type> setters() const
+  std::unordered_map<std::string, detail::map_member_info_type> setters() const
   {
-      std::unordered_map<std::string, detail::member_func_type> result;
+      std::unordered_map<std::string, detail::map_member_info_type> result;
       for (auto const& it : setters_)
       {
-          result.emplace(std::make_pair(it.first, it.second.func));
+          result.emplace(std::make_pair(it.first, it.second));
       }
 
       return result;
   }
 
-  std::unordered_map<std::string, detail::member_func_type> functions() const
+  std::unordered_map<std::string, detail::member_info_type> functions() const
   {
-      std::unordered_map<std::string, detail::member_func_type> result;
+      std::unordered_map<std::string, detail::member_info_type> result;
       for (auto const& it : defs_)
       {
-          result.emplace(std::make_pair(it.name, it.func));
+          result.emplace(std::make_pair(it.name, it));
       }
 
       return result;
+  }
+
+  template<class T>
+  T get_value(const C& inst, const std::string& name)
+  {
+      auto entry = getters_.find(name.c_str());
+      if (entry != end(getters_))
+      {
+          auto function = reinterpret_cast<T (C::*)()>(entry->second);
+          return inst.*function();
+      }
   }
 
 private:
@@ -1749,7 +1779,7 @@ private:
       "pointer size mismatch");
 
     defs_.push_back(detail::member_info_type{ name,
-      detail::member_stub<O, C, R, A...>, convert(ptr_to_member) });
+      detail::member_stub<O, C, R, A...>, mcomm::TypeID<R>::value, convert(ptr_to_member) });
   }
 
   template <std::size_t O = 2, class R, class ...A>
@@ -1760,15 +1790,18 @@ private:
       "pointer size mismatch");
 
     defs_.push_back(detail::member_info_type{ name,
-      detail::member_stub<O, C, R, A...>, convert(ptr_to_member) });
+      detail::member_stub<O, C, R, A...>, mcomm::TypeID<R>::value, convert(ptr_to_member) });
   }
 
-private:
+public:
   template <class C_>
   friend class class_;
 
   template <class C_>
   friend void detail::create_wrapper_table(lua_State*, C_*);
+
+  template <class C_>
+  friend void detail::push_instance(lua_State*, C_*, const std::string&);
 
   template <std::size_t O, class C_, class ...A>
   friend int detail::constructor_stub(lua_State* const);

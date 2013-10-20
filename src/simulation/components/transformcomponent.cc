@@ -1,65 +1,36 @@
-#include "transformcomponent.h"
-#include "jsonxx.h"
+#include <lualite.hpp>
 
-using namespace jsonxx;
+#include "transformcomponent.h"
+
+using namespace lualite;
 
 namespace mcomm 
 {
 
-std::string TransformComponent::name() const
+REGISTER_COMPONENT(TransformComponent);
+
+TransformComponent::TransformComponent() : sf::Transformable() {}
+
+void TransformComponent::bind()
 {
-    return "TransformComponent";
-}
+    static bool bound = false;
+    if (bound) return; 
 
-void TransformComponent::loadJson(const Object& o)
-{
-    auto scale = o.get<Object>("scale");
+    auto c = class_<TransformComponent>(ClassName)
+                .constructor()
+                .property("scale_x", &TransformComponent::scaleX, &TransformComponent::setScaleX)
+                .property("scale_y", &TransformComponent::scaleY, &TransformComponent::setScaleY)
+                .property("origin_x", &TransformComponent::originX, &TransformComponent::setOriginX)
+                .property("origin_y", &TransformComponent::originY, &TransformComponent::setOriginY)
+                .property("position_x", &TransformComponent::positionX, &TransformComponent::setPositionX)
+                .property("position_y", &TransformComponent::positionY, &TransformComponent::setPositionY);
 
-    if (!scale.empty())
-    {
-        auto sx = scale.get<Number>("x");
-        auto sy = scale.get<Number>("y");
-        setScale(static_cast<float>(sx), static_cast<float>(sy));
-    }
+    auto m = mcomm::MetaClass::create(ClassName, c);
 
-    auto origin = o.get<Object>("origin");
-    if (!origin.empty())
-    {
-        auto sx = origin.get<Number>("x");
-        auto sy = origin.get<Number>("y");
-        setOrigin(static_cast<float>(sx), static_cast<float>(sy));
-    }
+    MetaClassManager::instance().registerClass(m);
+    ScriptManager::instance().registerClass(c);
 
-    auto position = o.get<Object>("position");
-
-    if (!position.empty())
-    {
-        auto sx = position.get<Number>("x");
-        auto sy = position.get<Number>("y");
-        setPosition(static_cast<float>(sx), static_cast<float>(sy));
-    }
-}
-
-Object TransformComponent::toJson() const
-{
-    Object result;
-
-    Object scale;
-    scale << "x" << getScale().x;
-    scale << "y" << getScale().y;
-    result << "scale" << scale;
-
-    Object position;
-    position << "x" << getPosition().x;
-    position << "y" << getPosition().y;
-    result << "position" << position;
-
-    Object origin;
-    origin << "x" << getOrigin().x;
-    origin << "y" << getOrigin().y;
-    result << "origin" << origin;
-
-    return result;
+    bound = true;
 }
 
 }

@@ -1,13 +1,11 @@
 #pragma once
 #include "gtest/gtest.h"
 
-#include "jsonxx.h"
 #include "simulation/components/transformcomponent.h"
 
 TEST(TransformComponent, serialize)
 {
     using namespace mcomm;
-    using namespace jsonxx;
 
     TransformComponent t;
     t.setScale(3.0f, 4.2f);
@@ -16,17 +14,16 @@ TEST(TransformComponent, serialize)
 
     auto object = t.toJson();
     auto str = object.json();
+    LOG(ERROR) << str;
 
     TransformComponent t2;
-    Object o; 
-    EXPECT_TRUE(o.parse(str));
 
-    t2.loadJson(o);
+    t2.loadJson(object);
 
-    EXPECT_FLOAT_EQ(t.getScale().x, t2.getScale().x);
-    EXPECT_FLOAT_EQ(t.getScale().y, t2.getScale().y);
-    EXPECT_FLOAT_EQ(t.getOrigin().x, t2.getOrigin().x);
-    EXPECT_FLOAT_EQ(t.getOrigin().y, t2.getOrigin().y);
-    EXPECT_FLOAT_EQ(t.getPosition().x, t2.getPosition().x);
-    EXPECT_FLOAT_EQ(t.getPosition().y, t2.getPosition().y);
+    EXPECT_FLOAT_EQ(t.scaleX(), t2.scaleX());
+    EXPECT_FLOAT_EQ(t.scaleY(), t2.scaleY());
+    EXPECT_FLOAT_EQ(t.originX(), t2.originX());
+    EXPECT_FLOAT_EQ(t.originY(), t2.originY());
+    EXPECT_FLOAT_EQ(t.positionX(), t2.positionX());
+    EXPECT_FLOAT_EQ(t.positionY(), t2.positionY());
 }

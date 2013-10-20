@@ -4,13 +4,7 @@
 #include "drawablecomponent.h"
 #include "textcomponent.h"
 
-#include "reflection/metaclassmanager.h"
-#include "scripting/scriptmanager.h"
 
-#include "lua.hpp"
-#include "lualite.hpp"
-
-using namespace jsonxx;
 using namespace lualite;
 
 namespace mcomm
@@ -22,33 +16,6 @@ TextComponent::TextComponent()
 {
     m_text = std::make_shared<sf::Text>();
 }
-
-//void TextComponent::loadJson(const Object& o)
-//{
-    //auto font = o.get<Object>("font");
-
-    //setFontFileName(font.get<String>("filename"));
-
-    //m_text->setFont(m_font);
-    //m_text->setCharacterSize(font.get<Number>("size"));
-    //m_text->setString(o.get<String>("text"));
-
-    ////m_parent->COMPONENT(Drawable)->setDrawable(m_text);
-//}
-
-//Object TextComponent::toJson() const
-//{
-    //Object result;
-
-    //Object font;
-    //font << "filename" << m_fontFilename;
-    //font << "size" << m_text->getCharacterSize();
-    //result << "font" << font;
-
-    //result << "text" << text();
-
-    //return result;
-//}
 
 std::string TextComponent::text() const
 {
@@ -84,7 +51,11 @@ void TextComponent::setFontFileName(const std::string& value)
 
 void TextComponent::bind()
 {
+    static bool bound = false;
+    if (bound) return; 
+
     auto c = class_<TextComponent>(ClassName)
+                .constructor("new")
                 .def("name", &TextComponent::name)
                 .property("text", &TextComponent::text, &TextComponent::setText)
                 .property("size", &TextComponent::size, &TextComponent::setSize)
@@ -94,6 +65,8 @@ void TextComponent::bind()
 
     MetaClassManager::instance().registerClass(m);
     ScriptManager::instance().registerClass(c);
+
+    bound = true;
 }
 
 }

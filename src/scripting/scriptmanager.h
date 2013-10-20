@@ -18,15 +18,24 @@ public:
         return inst;
     }
 
+    ScriptManager(const ScriptManager&) = delete;
+
     lua_State* L() const { return m_luaState; }
 
-    template<class C>
-    std::string doString(C* instance, std::string script)
+    std::string doString(const std::string& script)
     {
-        lua_pushlightuserdata(m_luaState, reinterpret_cast<void*>(instance));
-        lua_setglobal(m_luaState, "instance");
         luaL_dostring(m_luaState, script.c_str());
-        return std::string(lua_tostring(m_luaState, -1));
+        auto ret = lua_tostring(m_luaState, -1);
+        if (ret)
+            return std::string(ret);
+        else
+            return "";
+    }
+
+    template<class C>
+    void pushInstance(C* instance, const std::string& name)
+    {
+        lualite::detail::push_instance(m_luaState, instance, name);
     }
 
     template<class C>

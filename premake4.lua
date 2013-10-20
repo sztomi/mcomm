@@ -43,7 +43,7 @@ solution "mcomm"
             "./src/simulation/components/textcomponent.cc",
             "./src/simulation/component.cc",
             "./src/simulation/entity.cc",
-            --"./src/simulation/components/spritecomponent.cc",
+            "./src/simulation/components/spritecomponent.cc",
             "./src/media/texturemanager.cc",
             "./src/3rdparty/**.cc",
             "./src/3rdparty/**.h",

@@ -9,6 +9,7 @@
 #include "jsonxx.h"
 
 #include "entity.h"
+#include "reflection/metaclassmanager.h"
 
 #define REGISTER_COMPONENT(CLASS) static const RegisterComponent<CLASS> FactoryRegister{CLASS::ClassName};
 #define REGISTER_SYSTEM(CLASS) static const RegisterSystem<CLASS> FactoryRegister{CLASS::ClassName};
@@ -45,7 +46,7 @@ public:
                     return std::make_shared<T>(); 
                 });
 
-        T::bind();
+        MetaClassManager::instance().registerBindFunction(&T::bind);
     }
 };
 
@@ -73,7 +74,7 @@ class RegisterSystem
                     return std::make_shared<T>(); 
                 });
 
-        T::bind();
+        MetaClassManager::instance().registerBindFunction(&T::bind);
     }
 };
 

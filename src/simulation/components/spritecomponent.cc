@@ -1,19 +1,21 @@
 #include "SFML/Graphics/Rect.hpp"
-#include "jsonxx.h"
 #include "glog/logging.h"
-
-#include "drawablecomponent.h"
-#include "media/texturemanager.h"
-#include "spritecomponent.h"
 
 #include "lua.hpp"
 #include "lualite.hpp"
 
-using namespace jsonxx;
+#include "drawablecomponent.h"
+#include "media/texturemanager.h"
+#include "reflection/metaclassmanager.h"
+#include "scripting/scriptmanager.h"
+#include "spritecomponent.h"
+
 using namespace lualite;
 
 namespace mcomm
 {
+
+REGISTER_COMPONENT(SpriteComponent);
 
 SpriteComponent::SpriteComponent()
     : m_sprite(), 
@@ -22,31 +24,6 @@ SpriteComponent::SpriteComponent()
       m_sprite_coord_y(0)
 {
     m_sprite = std::make_shared<sf::Sprite>();
-}
-
-std::string SpriteComponent::name() const
-{
-    return "SpriteComponent";
-}
-
-void SpriteComponent::loadJson(const Object& o)
-{
-    setTextureId(o.get<String>("texture_id"));
-    setSpriteCoordX(static_cast<int>(o.get<Number>("x")));
-    setSpriteCoordY(static_cast<int>(o.get<Number>("y")));
-
-    //m_parent->COMPONENT(Drawable)->setDrawable(m_sprite);
-}
-
-Object SpriteComponent::toJson() const
-{
-    Object result;
-
-    result << "texture_id" << m_texture_id;
-    result << "x" << m_sprite_coord_x;
-    result << "y" << m_sprite_coord_y;
-
-    return result;
 }
 
 std::shared_ptr<sf::Sprite> SpriteComponent::sprite() const
@@ -106,16 +83,26 @@ void SpriteComponent::updateTexRectangle()
             );
 }
 
-void SpriteComponent::luabind(lua_State* L)
+void SpriteComponent::bind()
 {
-    module(L,
-        class_<SpriteComponent>("SpriteComponent")
-            .constructor("new")
-            .def("name", &SpriteComponent::name)
-            .property("textureId", &SpriteComponent::textureId, &SpriteComponent::setTextureId)
-            .property("spriteCoordX", &SpriteComponent::spriteCoordX, &SpriteComponent::setSpriteCoordX)
-            .property("spriteCoordY", &SpriteComponent::spriteCoordY, &SpriteComponent::setSpriteCoordY)
-    );
+    using namespace lualite;
+
+    static bool bound = false;
+    if (bound) return; 
+
+    auto c = class_<SpriteComponent>("SpriteComponent")
+                .constructor("new")
+                .def("name", &SpriteComponent::name)
+                .property("textureId", &SpriteComponent::textureId, &SpriteComponent::setTextureId)
+                .property("spriteCoordX", &SpriteComponent::spriteCoordX, &SpriteComponent::setSpriteCoordX)
+                .property("spriteCoordY", &SpriteComponent::spriteCoordY, &SpriteComponent::setSpriteCoordY);
+
+    auto m = MetaClass::create(ClassName, c);
+
+    MetaClassManager::instance().registerClass(m);
+    ScriptManager::instance().registerClass(c);
+
+    bound = true;
 }
 
 }

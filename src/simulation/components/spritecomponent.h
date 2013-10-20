@@ -2,35 +2,29 @@
 
 #include <SFML/Graphics/Sprite.hpp>
 
-#include "../component.h"
+#include "simulation/component.h"
 
 namespace sf
 {
     class Texture;
 }
 
-class lua_State;
-
-
 namespace mcomm
 {
 
 class SpriteComponent : public Component
 {
+    DECLARE_COMPONENT(SpriteComponent)
+
 public:
-    SpriteComponent();
-
-    std::string name() const;
-    void loadJson(const jsonxx::Object& o);
-    jsonxx::Object toJson() const;
-    static void luabind(lua_State* L);
-
     std::shared_ptr<sf::Sprite> sprite() const;
 
     std::string textureId() const;
     void setTextureId(const std::string& id);
+
     int spriteCoordX() const;
     void setSpriteCoordX(int value);
+
     int spriteCoordY() const;
     void setSpriteCoordY(int value);
 

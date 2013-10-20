@@ -16,7 +16,6 @@ TEST(TextComponent, serialize)
     t.setSize(16);
 
     auto object = t.toJson();
-    auto str = object.json();
 
     TextComponent t2;
     t2.loadJson(object);
@@ -26,29 +25,43 @@ TEST(TextComponent, serialize)
     EXPECT_EQ(t.fontFileName(), t2.fontFileName());
 }
 
-TEST(TextComponent, lua_binding)
+TEST(TextComponent, lua_access_fields)
 {
     using namespace mcomm;
-    
-    auto script = R"QUOTE(
-            local c = SpriteComponent.new()
 
-            print("1:", c:name())
-            print("2:", c.textureId)
+    auto script = R"QUOTE(
+            local obj  = TextComponent.new()
+
+            obj.text = "Hello"
+            obj.fontFileName = "./res/fonts/zx_spectrum-7.ttf"
+            obj.size = 32
+
+            return obj.text
             
             )QUOTE";
 
-    auto L = ScriptManager::instance().L();
+    auto& sm = ScriptManager::instance();
 
-    luaL_dostring(L, script);
-    std::cout << lua_tostring(L, -1) << std::endl;
+    auto ret_val = sm.doString(script);
+    EXPECT_EQ(std::string(ret_val), "Hello");
+
 }
 
-TEST(TextComponent, MetaClass)
+TEST(TextComponent, lua_manipulate_cpp_obj)
 {
     using namespace mcomm;
+
+    auto& sm = ScriptManager::instance();
+
     TextComponent t;
-    t.setText("Hello world");
-    auto M = t.metaClass();
-    LOG(ERROR) << M->getPropertyStr(&t, "text");
+    sm.pushInstance(&t, "t");
+    sm.doString("t.text = \"luahello\"");
+
+    EXPECT_EQ(t.text(), "luahello");
+
+    t.setText("cpphello");
+    auto result = sm.doString("return t.text");
+
+    EXPECT_EQ(result, "cpphello");
 }
+

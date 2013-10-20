@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <vector>
 
 #include "glog/logging.h"
 
@@ -12,6 +13,8 @@ namespace mcomm
 class MetaClassManager
 {
 public:
+    typedef void (*BindFunction)();
+
     static MetaClassManager& instance()
     {
         static MetaClassManager inst;
@@ -21,6 +24,19 @@ public:
     void registerClass(const std::shared_ptr<MetaClass>& meta_class)
     {
         m_classes.emplace(std::make_pair(meta_class->name(), meta_class));
+    }
+
+    void registerBindFunction(BindFunction f)
+    {
+        m_bind_functions.push_back(f);
+    }
+
+    void bindClasses()
+    {
+        for (auto& bind_function : m_bind_functions)
+        {
+            bind_function();
+        }
     }
 
     std::shared_ptr<MetaClass> getMetaClass(const std::string& name)
@@ -36,6 +52,7 @@ public:
 
 private:
     std::unordered_map<std::string, std::shared_ptr<MetaClass>> m_classes;
+    std::vector<BindFunction> m_bind_functions;
 };
 
 }

@@ -1,21 +1,14 @@
 #pragma once
 #include "gtest/gtest.h"
 
-extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-}
-
-#include "jsonxx.h"
 #include "simulation/components/spritecomponent.h"
+#include "scripting/scriptmanager.h"
 
 #include <iostream>
 
 TEST(SpriteComponent, serialize)
 {
     using namespace mcomm;
-    using namespace jsonxx;
 
     SpriteComponent s;
     s.setTextureId("sprite1");
@@ -23,7 +16,6 @@ TEST(SpriteComponent, serialize)
     s.setSpriteCoordY(3);
     
     auto object = s.toJson();
-    auto str = object.json();
 
     SpriteComponent s2;
     s2.loadJson(object);
@@ -36,11 +28,8 @@ TEST(SpriteComponent, serialize)
 TEST(SpriteComponent, lua_binding)
 {
     using namespace mcomm;
-    auto L = luaL_newstate();
-    luaL_openlibs(L);
+    auto& sm = ScriptManager::instance();
 
-    SpriteComponent::luabind(L);
-    
     auto script = R"QUOTE(
             local c = SpriteComponent.new()
 
@@ -49,6 +38,5 @@ TEST(SpriteComponent, lua_binding)
             
             )QUOTE";
 
-    luaL_dostring(L, script);
-    std::cout << lua_tostring(L, -1) << std::endl;
+    sm.doString(script);
 }
