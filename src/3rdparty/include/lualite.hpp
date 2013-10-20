@@ -34,33 +34,22 @@
 #endif // __cplusplus
 
 #include <cassert>
-
 #include <cstring>
-
-#include <stdexcept>
-
-#include <type_traits>
-
 #include <forward_list>
-
+#include <stdexcept>
+#include <string>
+#include <type_traits>
 #include <unordered_map>
-
 #include <vector>
 
 #ifndef LUALITE_NO_STD_CONTAINERS
 
 #include <array>
-
 #include <deque>
-
 #include <list>
-
 #include <map>
-
 #include <string>
-
 #include <tuple>
-
 #include <utility>
 
 #endif // LUALITE_NO_STD_CONTAINERS
@@ -1288,7 +1277,7 @@ public:
     [](...){ }((args.set_parent_scope(this), 0)...);
   }
 
-  scope(scope const&) = delete;
+  //scope(scope const&) = delete;
 
   scope& operator=(scope const&) = delete;
 
@@ -1691,6 +1680,39 @@ public:
       detail::member_stub<3, C, RB, B...>, convert(ptr_to_memberb)});
 
     return *this;
+  }
+
+  std::unordered_map<std::string, detail::member_func_type> getters() const
+  {
+      std::unordered_map<std::string, detail::member_func_type> result;
+      for (auto const& it : getters_)
+      {
+          result.emplace(std::make_pair(it.first, it.second.func));
+      }
+
+      return result;
+  }
+
+  std::unordered_map<std::string, detail::member_func_type> setters() const
+  {
+      std::unordered_map<std::string, detail::member_func_type> result;
+      for (auto const& it : setters_)
+      {
+          result.emplace(std::make_pair(it.first, it.second.func));
+      }
+
+      return result;
+  }
+
+  std::unordered_map<std::string, detail::member_func_type> functions() const
+  {
+      std::unordered_map<std::string, detail::member_func_type> result;
+      for (auto const& it : defs_)
+      {
+          result.emplace(std::make_pair(it.name, it.func));
+      }
+
+      return result;
   }
 
 private:

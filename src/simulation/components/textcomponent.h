@@ -6,8 +6,6 @@
 
 #include "simulation/component.h"
 
-class lua_State;
-
 namespace sf
 {
     class Text;
@@ -18,18 +16,15 @@ namespace mcomm
 
 class TextComponent : public Component
 {
-public:
-    TextComponent();
+    DECLARE_COMPONENT(TextComponent)
 
-    std::string name() const;
-    void loadJson(const jsonxx::Object& o);
-    jsonxx::Object toJson() const;
-    static void luabind(lua_State* L);
-    
+public:
     std::string text() const;
     void setText(const std::string& value);
+
     unsigned int size() const;
     void setSize(unsigned int value);
+
     std::string fontFileName() const;
     void setFontFileName(const std::string& value);
 

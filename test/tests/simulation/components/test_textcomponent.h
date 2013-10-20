@@ -26,3 +26,29 @@ TEST(TextComponent, serialize)
     EXPECT_EQ(t.fontFileName(), t2.fontFileName());
 }
 
+TEST(TextComponent, lua_binding)
+{
+    using namespace mcomm;
+    
+    auto script = R"QUOTE(
+            local c = SpriteComponent.new()
+
+            print("1:", c:name())
+            print("2:", c.textureId)
+            
+            )QUOTE";
+
+    auto L = ScriptManager::instance().L();
+
+    luaL_dostring(L, script);
+    std::cout << lua_tostring(L, -1) << std::endl;
+}
+
+TEST(TextComponent, MetaClass)
+{
+    using namespace mcomm;
+    TextComponent t;
+    t.setText("Hello world");
+    auto M = t.metaClass();
+    LOG(ERROR) << M->getPropertyStr(&t, "text");
+}

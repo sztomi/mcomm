@@ -3,7 +3,9 @@
 #include "jsonxx.h"
 #include "glog/logging.h"
 
+#include "component.h"
 #include "factories.h"
+#include "system.h"
 
 using namespace jsonxx;
 
@@ -16,9 +18,9 @@ ComponentFactory& ComponentFactory::instance()
     return inst;
 }
 
-void ComponentFactory::register_class(const std::string& name, CompFactoryFunc& create_func)
+void ComponentFactory::registerClass(const std::string& name, const CompFactoryFunc& create_func)
 {
-    m_functions[name] = create_func;
+    m_functions.emplace(name, create_func);
 }
 
 std::shared_ptr<Component> ComponentFactory::create(const std::string& type)
@@ -40,9 +42,9 @@ SystemFactory& SystemFactory::instance()
     return inst;
 }
 
-void SystemFactory::register_class(const std::string& name, SysFactoryFunc& create_func)
+void SystemFactory::registerClass(const std::string& name, SysFactoryFunc& create_func)
 {
-    m_functions[name] = create_func;
+    m_functions.emplace(name, create_func);
 }
 
 std::shared_ptr<System> SystemFactory::create(const std::string& type)
@@ -51,7 +53,7 @@ std::shared_ptr<System> SystemFactory::create(const std::string& type)
 
     if (func == std::end(m_functions))
     {
-        LOG(ERROR) << "Unregistered component: " << type << std::endl; 
+        LOG(ERROR) << "Unregistered system: " << type << std::endl; 
         return std::shared_ptr<System>();
     }
 

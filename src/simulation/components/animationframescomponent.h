@@ -10,19 +10,17 @@ namespace mcomm
 
 class AnimationFramesComponent : public Component
 {
+    DECLARE_COMPONENT(AnimationFramesComponent)
+
 public:
-	AnimationFramesComponent();
+    int frameCount() const;
+    
+    void addFrame(const AnimationFrame& frame);
 
-	std::string toString() const;
-	void init(const pugi::xml_node& xml);
-
-	int frameCount() const;
-	
-	void addFrame(const AnimationFrame& frame);
-	AnimationFrame frame(int index);
+    AnimationFrame frame(int index);
 
 private:
-	std::vector<AnimationFrame> m_frames;
+    std::vector<AnimationFrame> m_frames;
 };
 
 }

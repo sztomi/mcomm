@@ -4,6 +4,9 @@
 #include "drawablecomponent.h"
 #include "textcomponent.h"
 
+#include "reflection/metaclassmanager.h"
+#include "scripting/scriptmanager.h"
+
 #include "lua.hpp"
 #include "lualite.hpp"
 
@@ -13,42 +16,39 @@ using namespace lualite;
 namespace mcomm
 {
 
+REGISTER_COMPONENT(TextComponent);
+
 TextComponent::TextComponent()
 {
     m_text = std::make_shared<sf::Text>();
 }
 
-std::string TextComponent::name() const
-{
-    return "TextComponent";
-}
+//void TextComponent::loadJson(const Object& o)
+//{
+    //auto font = o.get<Object>("font");
 
-void TextComponent::loadJson(const Object& o)
-{
-    auto font = o.get<Object>("font");
+    //setFontFileName(font.get<String>("filename"));
 
-    setFontFileName(font.get<String>("filename"));
+    //m_text->setFont(m_font);
+    //m_text->setCharacterSize(font.get<Number>("size"));
+    //m_text->setString(o.get<String>("text"));
 
-    m_text->setFont(m_font);
-    m_text->setCharacterSize(font.get<Number>("size"));
-    m_text->setString(o.get<String>("text"));
+    ////m_parent->COMPONENT(Drawable)->setDrawable(m_text);
+//}
 
-    //m_parent->COMPONENT(Drawable)->setDrawable(m_text);
-}
+//Object TextComponent::toJson() const
+//{
+    //Object result;
 
-Object TextComponent::toJson() const
-{
-    Object result;
+    //Object font;
+    //font << "filename" << m_fontFilename;
+    //font << "size" << m_text->getCharacterSize();
+    //result << "font" << font;
 
-    Object font;
-    font << "filename" << m_fontFilename;
-    font << "size" << m_text->getCharacterSize();
-    result << "font" << font;
+    //result << "text" << text();
 
-    result << "text" << text();
-
-    return result;
-}
+    //return result;
+//}
 
 std::string TextComponent::text() const
 {
@@ -82,15 +82,18 @@ void TextComponent::setFontFileName(const std::string& value)
     m_text->setFont(m_font);
 }
 
-void TextComponent::luabind(lua_State* L)
+void TextComponent::bind()
 {
-    module(L,
-        class_<TextComponent>("TextComponent")
-            .def("name", &TextComponent::name)
-            .property("text", &TextComponent::text, &TextComponent::setText)
-            .property("size", &TextComponent::size, &TextComponent::setSize)
-            .property("fontFileName", &TextComponent::fontFileName, &TextComponent::setFontFileName)
-    );
+    auto c = class_<TextComponent>(ClassName)
+                .def("name", &TextComponent::name)
+                .property("text", &TextComponent::text, &TextComponent::setText)
+                .property("size", &TextComponent::size, &TextComponent::setSize)
+                .property("fontFileName", &TextComponent::fontFileName, &TextComponent::setFontFileName);
+
+    auto m = mcomm::MetaClass::create(ClassName, c);
+
+    MetaClassManager::instance().registerClass(m);
+    ScriptManager::instance().registerClass(c);
 }
 
 }
