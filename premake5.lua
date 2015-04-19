@@ -5,8 +5,8 @@ solution "mcomm"
     language "C++"
     includedirs { "./src", "./src/3rdparty/include", "./src/3rdparty/include/lua" }
     libdirs { "./src/3rdparty/lib" }
-    links 
-    {
+    buildoptions { "-std=c++11" }
+    links {
         "sfml-system",
         "sfml-window",
         "sfml-graphics",
@@ -14,7 +14,6 @@ solution "mcomm"
         "glog",
         "lua"
     }
-    buildoptions { "-std=c++11" }
 
     configurations { "debug", "release" }
 
@@ -36,8 +35,8 @@ solution "mcomm"
 
     project "test"
         kind "ConsoleApp"
-        files 
-        { 
+        files
+        {
             "./src/3rdparty/src/jsonxx.cc",
             "./src/simulation/components/transformcomponent.cc",
             "./src/simulation/components/textcomponent.cc",
@@ -48,7 +47,7 @@ solution "mcomm"
             "./src/3rdparty/**.cc",
             "./src/3rdparty/**.h",
             "./src/simulation/factories.cc",
-            "./test/**.cc", "./test/**.h" 
+            "./test/**.cc", "./test/**.h"
         }
 
         includedirs { "./test/include" }

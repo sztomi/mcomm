@@ -44,7 +44,7 @@ class MetaClass;
 class Component
 {
 public:
-    void setParent(std::shared_ptr<Entity> parent);
+    void setParent(std::shared_ptr<Entity> const& parent);
     virtual std::string name() const = 0;
 
     virtual void loadJson(const jsonxx::Object& o);

@@ -6,9 +6,9 @@
 namespace mcomm
 {
 
-void Component::setParent(std::shared_ptr<Entity> parent)
+void Component::setParent(std::shared_ptr<Entity> const& parent)
 {
-	m_parent = parent;
+    m_parent = parent;
 }
 
 #define HANDLE_CASE(TYPE)                                      \
