@@ -43,7 +43,7 @@ public:
     {
         auto pos = m_classes.find(name);
 
-        if (pos != end(m_classes)) 
+        if (pos != end(m_classes))
             return pos->second;
 
         LOG(ERROR) << "Could not find metaclass for class " << name;

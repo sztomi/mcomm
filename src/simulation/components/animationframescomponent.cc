@@ -1,17 +1,13 @@
 #include "animationframescomponent.h"
-#include "pugixml.hpp"
 
 namespace mcomm
 {
 
+REGISTER_COMPONENT(AnimationFramesComponent);
+
 AnimationFramesComponent::AnimationFramesComponent()
 {
 
-}
-
-std::string AnimationFramesComponent::toString() const
-{
-	return "AnimationFramesComponent";
 }
 
 int AnimationFramesComponent::frameCount() const
@@ -28,19 +24,6 @@ AnimationFrame AnimationFramesComponent::frame(int index)
 {
 	return m_frames[index];
 }
-
-void AnimationFramesComponent::init(const pugi::xml_node& xml)
-{
-	const std::string n("AnimationFrame");
-	for (auto& child : xml.children())
-	{
-		if (n == child.name())
-		{
-			addFrame(AnimationFrame(child));
-		}
-	}
-}
-
 
 
 

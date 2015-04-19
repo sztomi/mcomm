@@ -1,2 +1,2 @@
 #!/bin/sh
-premake4 gmake && make -j6
+premake5 gmake && make -j6

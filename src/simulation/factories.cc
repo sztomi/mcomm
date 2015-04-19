@@ -18,7 +18,8 @@ ComponentFactory& ComponentFactory::instance()
     return inst;
 }
 
-void ComponentFactory::registerClass(const std::string& name, const CompFactoryFunc& create_func)
+void ComponentFactory::registerClass(const std::string& name,
+									 const CompFactoryFunc& create_func)
 {
     m_functions.emplace(name, create_func);
 }
@@ -29,7 +30,7 @@ std::shared_ptr<Component> ComponentFactory::create(const std::string& type)
 
     if (func == std::end(m_functions))
     {
-        LOG(ERROR) << "Unregistered component: " << type << std::endl; 
+        LOG(ERROR) << "Unregistered component: " << type << std::endl;
         return std::shared_ptr<Component>();
     }
 
@@ -42,7 +43,7 @@ SystemFactory& SystemFactory::instance()
     return inst;
 }
 
-void SystemFactory::registerClass(const std::string& name, SysFactoryFunc& create_func)
+void SystemFactory::registerClass(const std::string& name, SysFactoryFunc const& create_func)
 {
     m_functions.emplace(name, create_func);
 }
@@ -53,7 +54,7 @@ std::shared_ptr<System> SystemFactory::create(const std::string& type)
 
     if (func == std::end(m_functions))
     {
-        LOG(ERROR) << "Unregistered system: " << type << std::endl; 
+        LOG(ERROR) << "Unregistered system: " << type << std::endl;
         return std::shared_ptr<System>();
     }
 
@@ -76,7 +77,7 @@ std::shared_ptr<Entity> EntityFactory::createNew(const std::string& name, const 
     auto entity = createNew(name);
     auto components = o.get<Array>("components");
 
-    for (size_t i = 0; 
+    for (size_t i = 0;
          i < components.size();
          ++i)
     {
@@ -86,8 +87,8 @@ std::shared_ptr<Entity> EntityFactory::createNew(const std::string& name, const 
     }
 
     auto systems = o.get<Array>("systems");
-    
-    for (size_t i = 0; 
+
+    for (size_t i = 0;
          i < systems.size();
          ++i)
     {

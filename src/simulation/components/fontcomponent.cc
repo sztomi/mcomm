@@ -4,32 +4,22 @@
 namespace mcomm
 {
 
+REGISTER_COMPONENT(FontComponent)
+
+BIND_BEGIN(FontComponent)
+	.property("size", &FontComponent::size, &FontComponent::setSize)
+	.property("fileName", &FontComponent::fileName, &FontComponent::setFileName)
+BIND_END()
+
 FontComponent::FontComponent()
-    : m_size(20)
-{
-    m_font = std::make_shared<sf::Font>();
-}
+	: m_size(0), m_font(), m_filename("unset") {}
 
-std::string FontComponent::toString() const
-{
-    return "FontComponent";
-}
+std::string FontComponent::fileName() const { return m_filename; }
+void FontComponent::setFileName(std::string const& value) { m_filename = value; }
 
-void FontComponent::init(const pugi::xml_node& xml)
-{
-    m_font->loadFromFile(xml.child("FileName").text().as_string());
-    m_size = xml.child("Size").text().as_int();
-}
+int FontComponent::size() const { return m_size; }
+void FontComponent::setSize(int value) { m_size = value; }
 
-std::shared_ptr<sf::Font> FontComponent::font() const
-{
-    return m_font;
-}
-
-int FontComponent::size() const
-{
-    return m_size;
-}
-
+std::shared_ptr<sf::Font> FontComponent::font() const { return m_font; }
 
 }

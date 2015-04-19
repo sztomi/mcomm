@@ -1,20 +1,14 @@
-#include "pugixml.hpp"
+#include <lualite.hpp>
 #include "boundingboxcomponent.h"
+
+using namespace lualite;
 
 namespace mcomm
 {
 
-std::string BoundingBoxComponent::toString() const
-{
-    return "BoundingBoxComponent";
-}
+REGISTER_COMPONENT(BoundingBoxComponent);
 
-void BoundingBoxComponent::init(const pugi::xml_node &xml)
-{
-    m_rectangle.left = xml.child("X").text().as_int();
-    m_rectangle.top = xml.child("Y").text().as_int();
-    m_rectangle.width = xml.child("Width").text().as_int();
-    m_rectangle.height = xml.child("Height").text().as_int();
-}
+BIND_BEGIN(BoundingBoxComponent)
+BIND_END()
 
 }

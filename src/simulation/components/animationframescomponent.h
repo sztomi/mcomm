@@ -5,6 +5,8 @@
 #include "media/animationframe.h"
 #include "simulation/component.h"
 
+#include <cereal/types/polymorphic.hpp>
+
 namespace mcomm
 {
 
@@ -14,7 +16,7 @@ class AnimationFramesComponent : public Component
 
 public:
     int frameCount() const;
-    
+
     void addFrame(const AnimationFrame& frame);
 
     AnimationFrame frame(int index);

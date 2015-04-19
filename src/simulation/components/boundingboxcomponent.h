@@ -6,10 +6,7 @@ namespace mcomm
 
 class BoundingBoxComponent : public Component
 {
-public:
-    std::string toString() const;
-    void init(const pugi::xml_node &xml);
-    sf::IntRect& rect() const;
+	DECLARE_COMPONENT(BoundingBoxComponent)
 
 private:
     sf::IntRect m_rectangle;

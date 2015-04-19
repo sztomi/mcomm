@@ -1,11 +1,13 @@
--- this is a premake4 script
+-- this is a premake5 script
 -- see http://industriousone.com/premake
 
 solution "mcomm"
     language "C++"
-    includedirs { "./src", "./src/3rdparty/include", "./src/3rdparty/include/lua" }
-    libdirs { "./src/3rdparty/lib" }
+	kind "ConsoleApp"
+
     buildoptions { "-std=c++11" }
+    configurations { "debug", "release" }
+
     links {
         "sfml-system",
         "sfml-window",
@@ -15,7 +17,12 @@ solution "mcomm"
         "lua"
     }
 
-    configurations { "debug", "release" }
+    includedirs {
+		"./src",
+		"./src/3rdparty/include",
+		"./src/3rdparty/include/lua"
+	}
+    libdirs { "./src/3rdparty/lib" }
 
     configuration "debug"
         targetdir "build/debug"
@@ -35,8 +42,7 @@ solution "mcomm"
 
     project "test"
         kind "ConsoleApp"
-        files
-        {
+        files {
             "./src/3rdparty/src/jsonxx.cc",
             "./src/simulation/components/transformcomponent.cc",
             "./src/simulation/components/textcomponent.cc",

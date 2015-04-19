@@ -26,7 +26,23 @@
         return MetaClassManager::instance().getMetaClass(ClassName); \
     }                                                                \
     static void bind();                                              \
-    private:                                                        
+    private:
+
+
+#define BIND_BEGIN(THECLASS)                                         \
+	void THECLASS::bind()                                            \
+	{																 \
+		static bool bound = false;                                   \
+		if (bound) return;                                           \
+		auto c = lualite::class_<THECLASS>(ClassName)                \
+		           .constructor()                                    \
+				   .property("name", &THECLASS::name)                \
+
+#define BIND_END()                                                   \
+    ;auto m = mcomm::MetaClass::create(ClassName, c);                \
+    MetaClassManager::instance().registerClass(m);                   \
+    ScriptManager::instance().registerClass(c);                      \
+	bound = true; }
 
 namespace jsonxx
 {

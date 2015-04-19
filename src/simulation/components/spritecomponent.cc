@@ -17,8 +17,20 @@ namespace mcomm
 
 REGISTER_COMPONENT(SpriteComponent);
 
+BIND_BEGIN(SpriteComponent)
+	.property("textureId",
+			  &SpriteComponent::textureId,
+			  &SpriteComponent::setTextureId)
+	.property("spriteCoordX",
+			  &SpriteComponent::spriteCoordX,
+			  &SpriteComponent::setSpriteCoordX)
+	.property("spriteCoordY",
+			  &SpriteComponent::spriteCoordY,
+			  &SpriteComponent::setSpriteCoordY)
+BIND_END()
+
 SpriteComponent::SpriteComponent()
-    : m_sprite(), 
+    : m_sprite(),
       m_texture(),
       m_sprite_coord_x(0),
       m_sprite_coord_y(0)
@@ -49,7 +61,7 @@ void SpriteComponent::setTextureId(const std::string& id)
         m_sprite->setTexture(*m_texture.get());
 }
 
-int SpriteComponent::spriteCoordX() const 
+int SpriteComponent::spriteCoordX() const
 {
     return m_sprite_coord_x;
 }
@@ -83,27 +95,6 @@ void SpriteComponent::updateTexRectangle()
             );
 }
 
-void SpriteComponent::bind()
-{
-    using namespace lualite;
-
-    static bool bound = false;
-    if (bound) return; 
-
-    auto c = class_<SpriteComponent>("SpriteComponent")
-                .constructor("new")
-                .def("name", &SpriteComponent::name)
-                .property("textureId", &SpriteComponent::textureId, &SpriteComponent::setTextureId)
-                .property("spriteCoordX", &SpriteComponent::spriteCoordX, &SpriteComponent::setSpriteCoordX)
-                .property("spriteCoordY", &SpriteComponent::spriteCoordY, &SpriteComponent::setSpriteCoordY);
-
-    auto m = MetaClass::create(ClassName, c);
-
-    MetaClassManager::instance().registerClass(m);
-    ScriptManager::instance().registerClass(c);
-
-    bound = true;
-}
 
 }
 

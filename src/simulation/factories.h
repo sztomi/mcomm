@@ -41,9 +41,9 @@ public:
     RegisterComponent(const std::string& name)
     {
         ComponentFactory::instance().registerClass(name,
-                []() -> std::shared_ptr<Component> 
+                []() -> std::shared_ptr<Component>
                 {
-                    return std::make_shared<T>(); 
+                    return std::make_shared<T>();
                 });
 
         MetaClassManager::instance().registerBindFunction(&T::bind);
@@ -53,10 +53,10 @@ public:
 class SystemFactory
 {
 public:
-    typedef std::function<std::shared_ptr<System>(void)> SysFactoryFunc;
+    typedef std::function<std::shared_ptr<System>()> SysFactoryFunc;
 
     static SystemFactory& instance();
-    void registerClass(const std::string& name, SysFactoryFunc& create_func);
+    void registerClass(const std::string& name, const SysFactoryFunc& create_func);
     std::shared_ptr<System> create(const std::string& type);
 
 private:
@@ -66,12 +66,13 @@ private:
 template<class T>
 class RegisterSystem
 {
+public:
     RegisterSystem(const std::string& name)
     {
         SystemFactory::instance().registerClass(name,
-                []() -> std::shared_ptr<Component> 
+                []() -> std::shared_ptr<System>
                 {
-                    return std::make_shared<T>(); 
+                    return std::make_shared<T>();
                 });
 
         MetaClassManager::instance().registerBindFunction(&T::bind);

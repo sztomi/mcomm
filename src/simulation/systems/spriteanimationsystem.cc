@@ -1,4 +1,3 @@
-#include "pugixml.hpp"
 #include "spriteanimationsystem.h"
 
 #include "simulation/components/animationframescomponent.h"
@@ -7,21 +6,18 @@
 namespace mcomm
 {
 
+REGISTER_SYSTEM(SpriteAnimationSystem);
+
+BIND_BEGIN(SpriteAnimationSystem)
+	.def("update", &SpriteAnimationSystem::update)
+	.def("stopAt", &SpriteAnimationSystem::stopAt)
+	.def("startFrom", &SpriteAnimationSystem::startFrom)
+	//.def("is_running", &SpriteAnimationSystem::isRunning)
+BIND_END()
+
 SpriteAnimationSystem::SpriteAnimationSystem()
 	: m_currentFrameIndex(0), m_forward(true), m_isRunning(false)
-{
-
-}
-
-void SpriteAnimationSystem::init(const pugi::xml_node& xml)
-{
-	stopAt(xml.child("StartFrame").text().as_int());
-}
-
-std::string SpriteAnimationSystem::toString() const
-{
-	return "SpriteAnimationSystem";
-}
+{ }
 
 void SpriteAnimationSystem::update(float dt)
 {
@@ -30,7 +26,7 @@ void SpriteAnimationSystem::update(float dt)
 	auto frames = m_parent->COMPONENT(AnimationFrames);
 	auto currentFrame = frames->frame(m_currentFrameIndex);
 
-	if (clock.getElapsedTime().asMilliseconds() > currentFrame.frameLength())	
+	if (clock.getElapsedTime().asMilliseconds() > currentFrame.frameLength())
 	{
 		if (m_forward)
 		{
@@ -65,7 +61,7 @@ void SpriteAnimationSystem::update(float dt)
 
 void SpriteAnimationSystem::applyFrame()
 {
-	auto frames = m_parent->COMPONENT(AnimationFrames);	
+	auto frames = m_parent->COMPONENT(AnimationFrames);
 	auto nextFrame = frames->frame(m_currentFrameIndex);
 	auto sprite = m_parent->COMPONENT(Sprite);
 	sprite->setSpriteCoordX(nextFrame.texCoordX());

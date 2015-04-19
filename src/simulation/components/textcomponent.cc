@@ -12,6 +12,18 @@ namespace mcomm
 
 REGISTER_COMPONENT(TextComponent);
 
+BIND_BEGIN(TextComponent)
+	.property("text",
+			  &TextComponent::text,
+			  &TextComponent::setText)
+	.property("size",
+			  &TextComponent::size,
+			  &TextComponent::setSize)
+	.property("fontFileName",
+			  &TextComponent::fontFileName,
+			  &TextComponent::setFontFileName)
+BIND_END()
+
 TextComponent::TextComponent()
 {
     m_text = std::make_shared<sf::Text>();
@@ -49,24 +61,5 @@ void TextComponent::setFontFileName(const std::string& value)
     m_text->setFont(m_font);
 }
 
-void TextComponent::bind()
-{
-    static bool bound = false;
-    if (bound) return; 
-
-    auto c = class_<TextComponent>(ClassName)
-                .constructor("new")
-                .def("name", &TextComponent::name)
-                .property("text", &TextComponent::text, &TextComponent::setText)
-                .property("size", &TextComponent::size, &TextComponent::setSize)
-                .property("fontFileName", &TextComponent::fontFileName, &TextComponent::setFontFileName);
-
-    auto m = mcomm::MetaClass::create(ClassName, c);
-
-    MetaClassManager::instance().registerClass(m);
-    ScriptManager::instance().registerClass(c);
-
-    bound = true;
-}
 
 }

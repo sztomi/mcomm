@@ -8,11 +8,9 @@ namespace mcomm
 
 class SpriteAnimationSystem : public System
 {
-public:
-	SpriteAnimationSystem();
+	DECLARE_COMPONENT(SpriteAnimationSystem)
 
-	void init(const pugi::xml_node& xml);
-	std::string toString() const;
+public:
 	bool isRunning() const;
 
 	void update(float dt);
