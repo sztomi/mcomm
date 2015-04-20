@@ -21,22 +21,22 @@ namespace mcomm
 typedef std::unordered_map<std::string, lualite::detail::map_member_info_type> PropFuncMap;
 typedef std::unordered_map<std::string, lualite::detail::member_info_type> FuncMap;
 
-class MetaClass
+class MetaObject
 {
 public:
-    MetaClass(const std::string& name, const FuncMap& functions, const PropFuncMap& getters, const PropFuncMap& setters)
+    MetaObject(const std::string& name, const FuncMap& functions, const PropFuncMap& getters, const PropFuncMap& setters)
         : m_name(name),
           m_functions(functions),
           m_getters(getters),
           m_setters(setters) {}
 
     template<class C>
-    static std::shared_ptr<MetaClass> create(const std::string& name, const lualite::class_<C>& c)
+    static std::shared_ptr<MetaObject> create(const std::string& name, const lualite::class_<C>& c)
     {
         const auto& funcs = c.functions();
         const auto& getters = c.getters();
         const auto& setters = c.setters();
-        return std::make_shared<MetaClass>(name, funcs, getters, setters);
+        return std::make_shared<MetaObject>(name, funcs, getters, setters);
     }
 
     std::string name() const { return m_name; }
@@ -53,7 +53,7 @@ public:
                 lualite::detail::member_func_type mf;
                 R (C::*f)();
             } pfunc;
-            
+
             pfunc.mf = entry->second.func;
             return ((instance)->*(pfunc.f))();
         }
@@ -77,7 +77,7 @@ public:
             return ((instance)->*(pfunc.f))(value);
         }
 
-        LOG(ERROR) << "Could not find setter for property " 
+        LOG(ERROR) << "Could not find setter for property "
                    << name
                    << ". Read-only property?";
     }
@@ -96,7 +96,7 @@ public:
                 return boost::lexical_cast<std::string>(value);\
             }                                                  \
             break;
- 
+
     template<class C>
     std::string getPropertyStr(C* instance, const std::string& name)
     {

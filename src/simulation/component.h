@@ -7,7 +7,7 @@
 
 #include "entity.h"
 #include "factories.h"
-#include "reflection/metaclassmanager.h"
+#include "reflection/metaobjectmanager.h"
 #include "reflection/typeids.h"
 #include "scripting/scriptmanager.h"
 #include "util/constexpr_crc.h"
@@ -22,8 +22,8 @@
     static constexpr char const* ClassName = #c;                     \
     static constexpr uint32_t const ClassTypeID = TYPE_ID(ClassName);\
     std::string name() const { return ClassName; }                   \
-    std::shared_ptr<MetaClass> metaClass() const {                   \
-        return MetaClassManager::instance().getMetaClass(ClassName); \
+    std::shared_ptr<MetaObject> metaObject() const {                   \
+        return MetaObjectManager::instance().getMetaObject(ClassName); \
     }                                                                \
     static void bind();                                              \
     private:
@@ -39,8 +39,8 @@
 				   .property("name", &THECLASS::name)                \
 
 #define BIND_END()                                                   \
-    ;auto m = mcomm::MetaClass::create(ClassName, c);                \
-    MetaClassManager::instance().registerClass(m);                   \
+    ;auto m = mcomm::MetaObject::create(ClassName, c);                \
+    MetaObjectManager::instance().registerClass(m);                   \
     ScriptManager::instance().registerClass(c);                      \
 	bound = true; }
 
@@ -52,7 +52,7 @@ namespace jsonxx
 namespace mcomm
 {
 
-class MetaClass;
+class MetaObject;
 
 /**
  * Represents a generic Component.
@@ -66,7 +66,7 @@ public:
     virtual void loadJson(const jsonxx::Object& o);
     virtual jsonxx::Object toJson();
 
-    virtual std::shared_ptr<MetaClass> metaClass() const = 0;
+    virtual std::shared_ptr<MetaObject> metaObject() const = 0;
 
 protected:
     std::shared_ptr<Entity> m_parent;

@@ -6,7 +6,7 @@
 
 #include "drawablecomponent.h"
 #include "media/texturemanager.h"
-#include "reflection/metaclassmanager.h"
+#include "reflection/metaobjectmanager.h"
 #include "scripting/scriptmanager.h"
 #include "spritecomponent.h"
 

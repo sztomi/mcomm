@@ -1,5 +1,5 @@
 #include "component.h"
-#include "reflection/metaclass.h"
+#include "reflection/metaobject.h"
 #include "jsonxx.h"
 #include "reflection/typeids.h"
 
@@ -17,12 +17,12 @@ void Component::setParent(std::shared_ptr<Entity> const& parent)
                 auto value = M->getProperty<TYPE>(this, prop); \
                 result << prop << value;                       \
             }                                                  \
-            break;                                       
+            break;
 
 jsonxx::Object Component::toJson()
 {
     jsonxx::Object result;
-    auto M = metaClass();
+    auto M = metaObject();
     auto property_names = M->propertyNames();
     for (auto& prop : property_names)
     {
@@ -55,7 +55,7 @@ jsonxx::Object Component::toJson()
 void Component::loadJson(const jsonxx::Object& o)
 {
     using namespace jsonxx;
-    auto M = metaClass();
+    auto M = metaObject();
     auto property_names = M->propertyNames();
     for (auto& prop : property_names)
     {

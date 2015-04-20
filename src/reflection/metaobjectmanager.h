@@ -5,23 +5,23 @@
 
 #include "glog/logging.h"
 
-#include "metaclass.h"
+#include "metaobject.h"
 
 namespace mcomm
 {
 
-class MetaClassManager
+class MetaObjectManager
 {
 public:
     typedef void (*BindFunction)();
 
-    static MetaClassManager& instance()
+    static MetaObjectManager& instance()
     {
-        static MetaClassManager inst;
+        static MetaObjectManager inst;
         return inst;
     }
 
-    void registerClass(const std::shared_ptr<MetaClass>& meta_class)
+    void registerClass(const std::shared_ptr<MetaObject>& meta_class)
     {
         m_classes.emplace(std::make_pair(meta_class->name(), meta_class));
     }
@@ -39,19 +39,19 @@ public:
         }
     }
 
-    std::shared_ptr<MetaClass> getMetaClass(const std::string& name)
+    std::shared_ptr<MetaObject> getMetaObject(const std::string& name)
     {
         auto pos = m_classes.find(name);
 
         if (pos != end(m_classes))
             return pos->second;
 
-        LOG(ERROR) << "Could not find metaclass for class " << name;
-        return std::shared_ptr<MetaClass>();
+        LOG(ERROR) << "Could not find metaObject for class " << name;
+        return std::shared_ptr<MetaObject>();
     }
 
 private:
-    std::unordered_map<std::string, std::shared_ptr<MetaClass>> m_classes;
+    std::unordered_map<std::string, std::shared_ptr<MetaObject>> m_classes;
     std::vector<BindFunction> m_bind_functions;
 };
 

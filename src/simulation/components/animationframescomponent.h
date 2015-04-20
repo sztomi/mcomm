@@ -5,7 +5,6 @@
 #include "media/animationframe.h"
 #include "simulation/component.h"
 
-#include <cereal/types/polymorphic.hpp>
 
 namespace mcomm
 {

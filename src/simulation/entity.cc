@@ -7,7 +7,7 @@
 namespace mcomm
 {
 
-Entity::Entity(int aId, const std::string& aName) 
+Entity::Entity(int aId, const std::string& aName)
     : m_id(aId), m_name(aName),
     m_components(), m_systems()
 {
@@ -43,6 +43,10 @@ std::shared_ptr<System> Entity::attachSystem(const std::string& type)
     m_systems[type] = s;
     s->setParent(shared_from_this());
     return s;
+}
+
+std::string Entity::toJson() const
+{
 }
 
 }

@@ -4,8 +4,9 @@
 #include <memory>
 #include <string>
 #include <iostream>
+#include <string>
 
-namespace mcomm 
+namespace mcomm
 {
 
 class Component;
@@ -41,6 +42,8 @@ public:
 		else
 			return std::static_pointer_cast<T>(m_systems[type]);
 	}
+
+	std::string toJson() const;
 
 private:
 	int m_id;
