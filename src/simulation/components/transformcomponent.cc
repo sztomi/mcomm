@@ -7,9 +7,7 @@ using namespace lualite;
 namespace mcomm
 {
 
-REGISTER_COMPONENT(TransformComponent);
-
-BIND_BEGIN(TransformComponent)
+BIND_COMPONENT(TransformComponent)
 	.property("scale_x",
 			  &TransformComponent::scaleX,
 			  &TransformComponent::setScaleX)

@@ -1,12 +1,9 @@
-#include "pugixml.hpp"
 #include "fontcomponent.h"
 
 namespace mcomm
 {
 
-REGISTER_COMPONENT(FontComponent)
-
-BIND_BEGIN(FontComponent)
+BIND_COMPONENT(FontComponent)
 	.property("size", &FontComponent::size, &FontComponent::setSize)
 	.property("fileName", &FontComponent::fileName, &FontComponent::setFileName)
 BIND_END()

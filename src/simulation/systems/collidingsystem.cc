@@ -4,10 +4,10 @@
 namespace mcomm
 {
 
-std::string CollidingSystem::toString() const
-{
-    return "CollidingSystem";
-}
+BIND_SYSTEM(CollidingSystem)
+BIND_END()
+
+CollidingSystem::CollidingSystem() {}
 
 void CollidingSystem::update(float dt)
 {

@@ -8,7 +8,7 @@ using namespace lualite;
 namespace mcomm
 {
 
-BIND_BEGIN(SpeedComponent)
+BIND_COMPONENT(SpeedComponent)
 	.property("x", &SpeedComponent::x, &SpeedComponent::setX)
 	.property("y", &SpeedComponent::y, &SpeedComponent::setY)
 BIND_END()

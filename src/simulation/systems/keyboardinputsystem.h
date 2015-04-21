@@ -7,9 +7,10 @@ namespace mcomm
 
 class KeyboardInputSystem : public System
 {
+	DECLARE_COMPONENT(KeyboardInputSystem)
+
 public:
-	std::string toString() const;
-	void update(float dt);
+	void update(float dt) override;
 };
 
 }

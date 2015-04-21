@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include "glog/logging.h"
 
-#include "reflection/metaclassmanager.h"
+#include "reflection/metaobjectmanager.h"
 
 #include "tests/simulation/components/test_spritecomponent.h"
 #include "tests/simulation/components/test_textcomponent.h"
@@ -11,6 +11,6 @@ int main(int argc, char* argv[])
 {
     ::testing::InitGoogleTest(&argc, argv);
     ::google::InitGoogleLogging(argv[0]);
-    mcomm::MetaClassManager::instance().bindClasses();
+    mcomm::MetaObjectManager::instance().bindClasses();
     return RUN_ALL_TESTS();
 }

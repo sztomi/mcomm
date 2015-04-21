@@ -6,9 +6,7 @@
 namespace mcomm
 {
 
-REGISTER_SYSTEM(SpriteAnimationSystem);
-
-BIND_BEGIN(SpriteAnimationSystem)
+BIND_SYSTEM(SpriteAnimationSystem)
 	.def("update", &SpriteAnimationSystem::update)
 	.def("stopAt", &SpriteAnimationSystem::stopAt)
 	.def("startFrom", &SpriteAnimationSystem::startFrom)

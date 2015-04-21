@@ -14,7 +14,7 @@ TEST(TransformComponent, serialize)
 
     auto object = t.toJson();
     auto str = object.json();
-    LOG(ERROR) << str;
+    LOG(INFO) << str;
 
     TransformComponent t2;
 

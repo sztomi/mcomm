@@ -10,9 +10,7 @@ using namespace lualite;
 namespace mcomm
 {
 
-REGISTER_COMPONENT(TextComponent);
-
-BIND_BEGIN(TextComponent)
+BIND_COMPONENT(TextComponent)
 	.property("text",
 			  &TextComponent::text,
 			  &TextComponent::setText)

@@ -8,12 +8,12 @@
 namespace mcomm
 {
 
-std::string RenderSystem::toString() const
-{
-	return "RenderSystem";
-}
+BIND_SYSTEM(RenderSystem)
+BIND_END()
 
-void RenderSystem::update(float dt) 
+RenderSystem::RenderSystem() {}
+
+void RenderSystem::update(float dt)
 {
 	auto drawable = m_parent->COMPONENT(Drawable)->drawable();
 	auto transform = m_parent->COMPONENT(Transform)->getTransform();

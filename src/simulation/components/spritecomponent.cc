@@ -4,20 +4,18 @@
 #include "lua.hpp"
 #include "lualite.hpp"
 
-#include "drawablecomponent.h"
 #include "media/texturemanager.h"
 #include "reflection/metaobjectmanager.h"
 #include "scripting/scriptmanager.h"
 #include "spritecomponent.h"
+#include "drawablecomponent.h"
 
 using namespace lualite;
 
 namespace mcomm
 {
 
-REGISTER_COMPONENT(SpriteComponent);
-
-BIND_BEGIN(SpriteComponent)
+BIND_COMPONENT(SpriteComponent)
 	.property("textureId",
 			  &SpriteComponent::textureId,
 			  &SpriteComponent::setTextureId)
@@ -95,6 +93,18 @@ void SpriteComponent::updateTexRectangle()
             );
 }
 
+void SpriteComponent::setParent(std::shared_ptr<Entity> const& parent)
+{
+	auto drawable = parent->COMPONENT(Drawable);
+	if (!drawable)
+	{
+		LOG(ERROR) << "SpriteComponent requires a drawable component in the Entity.";
+	}
+
+	drawable->setDrawable(m_sprite);
+
+	Component::setParent(parent);
+}
 
 }
 

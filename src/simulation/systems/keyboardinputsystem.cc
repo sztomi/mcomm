@@ -8,10 +8,10 @@
 namespace mcomm
 {
 
-std::string KeyboardInputSystem::toString() const
-{
-	return "KeyboardInputSystem";
-}
+BIND_SYSTEM(KeyboardInputSystem)
+BIND_END()
+
+KeyboardInputSystem::KeyboardInputSystem() {}
 
 void KeyboardInputSystem::update(float dt)
 {
@@ -82,7 +82,7 @@ void KeyboardInputSystem::update(float dt)
 		}
 	}
 
-	// 
+	//
 
 	// if (Keyboard::isKeyPressed(Keyboard::Up))
 	// {

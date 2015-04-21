@@ -6,9 +6,9 @@ using namespace lualite;
 namespace mcomm
 {
 
-REGISTER_COMPONENT(BoundingBoxComponent);
-
-BIND_BEGIN(BoundingBoxComponent)
+BIND_COMPONENT(BoundingBoxComponent)
 BIND_END()
+
+BoundingBoxComponent::BoundingBoxComponent() {}
 
 }

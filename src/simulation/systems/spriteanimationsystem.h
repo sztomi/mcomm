@@ -13,7 +13,7 @@ class SpriteAnimationSystem : public System
 public:
 	bool isRunning() const;
 
-	void update(float dt);
+	void update(float dt) override;
 	void stopAt(int frame);
 	void startFrom(int frame);
 

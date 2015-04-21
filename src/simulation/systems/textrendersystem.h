@@ -7,9 +7,9 @@ namespace mcomm
 
 class TextRenderSystem : public System
 {
+	DECLARE_COMPONENT(TextRenderSystem)
 public:
-	std::string toString() const;
-	void update(float dt);
+	void update(float dt) override;
 };
 
 }

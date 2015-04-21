@@ -10,9 +10,9 @@ namespace mcomm
 
 class RenderSystem : public System
 {
+	DECLARE_COMPONENT(RenderSystem)
 public:
-	std::string toString() const;
-	void update(float dt);
+	void update(float dt) override;
 };
 
 }

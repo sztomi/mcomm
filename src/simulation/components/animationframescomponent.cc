@@ -3,7 +3,9 @@
 namespace mcomm
 {
 
-REGISTER_COMPONENT(AnimationFramesComponent);
+BIND_COMPONENT(AnimationFramesComponent)
+	.def("frame_count", &AnimationFramesComponent::frameCount)
+BIND_END()
 
 AnimationFramesComponent::AnimationFramesComponent()
 {

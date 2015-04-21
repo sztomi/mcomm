@@ -13,9 +13,7 @@ using namespace lualite;
 namespace mcomm
 {
 
-REGISTER_COMPONENT(DrawableComponent)
-
-BIND_BEGIN(DrawableComponent)
+BIND_COMPONENT(DrawableComponent)
 BIND_END()
 
 

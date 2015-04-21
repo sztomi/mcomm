@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 #include "../system.h"
 
@@ -7,9 +7,10 @@ namespace mcomm
 
 class CollidingSystem : public System
 {
+	DECLARE_COMPONENT(CollidingSystem)
+
 public:
-	std::string toString() const;
-	void update(float dt);
+	void update(float dt) override;
 };
 
 }

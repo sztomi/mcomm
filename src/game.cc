@@ -10,11 +10,15 @@
 #include "simulation/collisiongrid.h"
 #include "simulation/entity.h"
 #include "simulation/factories.h"
+#include "simulation/component.h"
+#include "simulation/components/spritecomponent.h"
+#include "simulation/components/transformcomponent.h"
+#include "simulation/components/speedcomponent.h"
 
 namespace mcomm
 {
 
-Game::Game() : state(GameState::PRERUN) 
+Game::Game() : state(GameState::PRERUN)
 {
 	m_renderWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(800, 600), "mcomm");
 }
@@ -27,7 +31,33 @@ std::shared_ptr<sf::RenderWindow> Game::renderWindow() const
 void Game::setup()
 {
 	TextureManager::instance().addTexture("res/sprites1.png", "sprite1");
-	world.loadEntitiesXml("res/start_entities.xml");
+	auto player = EntityFactory::instance().createNew("Player");
+	player->attachComponent("DrawableComponent");
+	player->attachComponent("SpriteComponent");
+	player->attachComponent("TransformComponent");
+	player->attachComponent("SpeedComponent");
+
+	player->COMPONENT(Sprite)->setTextureId("sprite1");
+
+	auto transform = player->COMPONENT(Transform);
+	transform->setScaleX(2.0f);
+	transform->setScaleY(2.0f);
+	transform->setOriginX(16.0f);
+	transform->setOriginY(16.0f);
+	transform->setPositionX(300.0f);
+	transform->setPositionY(200.0f);
+
+	auto speed = player->COMPONENT(Speed);
+	speed->setX(60.0f);
+	speed->setY(60.0f);
+
+	player->attachSystem("RenderSystem");
+	player->attachSystem("VelocitySystem");
+
+	world.addEntity(player);
+
+	world.saveJson("level1.json");
+	//world.loadJson("res/start_entities.xml");
 }
 
 void Game::run()

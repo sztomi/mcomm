@@ -56,7 +56,7 @@
 
 extern "C" {
 
-# include "lua/lauxlib.h"
+# include "lauxlib.h"
 
 }
 
@@ -804,7 +804,7 @@ inline typename std::enable_if<
 get_arg(lua_State* const L)
 {
   assert(lua_istable(L, I));
- 
+
   typedef typename std::decay<C>::type result_type;
 
   lua_rawgeti(L, -1, 1);
@@ -1109,7 +1109,7 @@ int constructor_stub(lua_State* const L)
       lua_pushlightuserdata(L, &mi.func);
 
       lua_pushcclosure(L, mi.callback, 2);
-    
+
       rawsetfield(L, -2, mi.name);
     }
   }
@@ -1121,7 +1121,7 @@ int constructor_stub(lua_State* const L)
     lua_pushlightuserdata(L, &mi.func);
 
     lua_pushcclosure(L, mi.callback, 2);
-  
+
     rawsetfield(L, -2, mi.name);
   }
 

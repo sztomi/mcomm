@@ -5,10 +5,10 @@
 namespace mcomm
 {
 
-std::string VelocitySystem::toString() const
-{
-	return "VelocitySystem";
-}
+BIND_SYSTEM(VelocitySystem)
+BIND_END()
+
+VelocitySystem::VelocitySystem() {}
 
 void VelocitySystem::update(float dt)
 {
@@ -21,12 +21,12 @@ void VelocitySystem::update(float dt)
 	{
 		transform->move(s.x, s.y);
 		auto anim = m_parent->SYSTEM(SpriteAnimation);
-		if (!anim->isRunning()) anim->startFrom(0);
+		if (anim && !anim->isRunning()) anim->startFrom(0);
 	}
 	else
 	{
 		auto anim = m_parent->SYSTEM(SpriteAnimation);
-		anim->stopAt(1);
+		if (anim) anim->stopAt(1);
 	}
 }
 

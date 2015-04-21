@@ -28,6 +28,8 @@ public:
     int spriteCoordY() const;
     void setSpriteCoordY(int value);
 
+	void setParent(std::shared_ptr<Entity> const& parent) override;
+
 private:
     void updateTexRectangle();
 

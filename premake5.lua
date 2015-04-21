@@ -20,7 +20,6 @@ solution "mcomm"
     includedirs {
 		"./src",
 		"./src/3rdparty/include",
-		"./src/3rdparty/include/lua"
 	}
     libdirs { "./src/3rdparty/lib" }
 
@@ -57,5 +56,4 @@ solution "mcomm"
         }
 
         includedirs { "./test/include" }
-        libdirs { "./test/lib" }
         links "gtest"

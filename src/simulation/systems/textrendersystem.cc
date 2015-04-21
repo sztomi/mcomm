@@ -10,10 +10,10 @@
 namespace mcomm
 {
 
-std::string TextRenderSystem::toString() const
-{
-    return "TextRenderSystem";
-}
+BIND_SYSTEM(TextRenderSystem)
+BIND_END()
+
+TextRenderSystem::TextRenderSystem() {}
 
 void TextRenderSystem::update(float dt)
 {

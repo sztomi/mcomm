@@ -1,4 +1,5 @@
 #include <boost/format.hpp>
+#include "jsonxx.h"
 
 #include "entity.h"
 #include "factories.h"
@@ -45,8 +46,26 @@ std::shared_ptr<System> Entity::attachSystem(const std::string& type)
     return s;
 }
 
-std::string Entity::toJson() const
+jsonxx::Object Entity::toJson() const
 {
+	jsonxx::Object result;
+	jsonxx::Array components, systems;
+
+	for (auto& c : m_components)
+	{
+		components << c.second->name() << c.second->toJson();
+	}
+
+	for (auto& s : m_systems)
+	{
+		systems << s.second->name() << s.second->toJson();
+	}
+
+	result << "name" << m_name;
+	result << "components" << components;
+	result << "systems" << systems;
+
+	return result;
 }
 
 }

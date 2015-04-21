@@ -6,6 +6,8 @@
 #include <iostream>
 #include <string>
 
+namespace jsonxx { class Object; }
+
 namespace mcomm
 {
 
@@ -26,12 +28,12 @@ public:
 	void update(float dt);
 
 	template<typename T>
-	std::shared_ptr<T> component(const std::string& type)
+	std::shared_ptr<T> component(const std::string& typeStr)
 	{
-		if (m_components.count(type) == 0)
+		if (m_components.count(typeStr) == 0)
 			return std::shared_ptr<T>();
 		else
-			return std::static_pointer_cast<T>(m_components[type]);
+			return std::static_pointer_cast<T>(m_components[typeStr]);
 	}
 
 	template<typename T>
@@ -43,7 +45,7 @@ public:
 			return std::static_pointer_cast<T>(m_systems[type]);
 	}
 
-	std::string toJson() const;
+	jsonxx::Object toJson() const;
 
 private:
 	int m_id;

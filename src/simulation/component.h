@@ -15,21 +15,22 @@
 #include "lua.hpp"
 #include "lualite.hpp"
 
-#define COMPONENT(c) component<c##Component>(#c)
-#define SYSTEM(s) system<s##System>(#s)
+#define COMPONENT(c) component<c##Component>(#c"Component")
+#define SYSTEM(s) system<s##System>(#s"System")
 #define DECLARE_COMPONENT(c) public:                                 \
     c();                                                             \
     static constexpr char const* ClassName = #c;                     \
     static constexpr uint32_t const ClassTypeID = TYPE_ID(ClassName);\
-    std::string name() const { return ClassName; }                   \
-    std::shared_ptr<MetaObject> metaObject() const {                   \
+    std::string name() const override { return ClassName; }                   \
+    std::shared_ptr<MetaObject> metaObject() const override {                   \
         return MetaObjectManager::instance().getMetaObject(ClassName); \
     }                                                                \
     static void bind();                                              \
     private:
 
 
-#define BIND_BEGIN(THECLASS)                                         \
+#define BIND_COMPONENT(THECLASS)                                     \
+	REGISTER_COMPONENT(THECLASS)                                     \
 	void THECLASS::bind()                                            \
 	{																 \
 		static bool bound = false;                                   \
@@ -38,8 +39,21 @@
 		           .constructor()                                    \
 				   .property("name", &THECLASS::name)                \
 
+
+#define BIND_SYSTEM(THECLASS)                                        \
+	REGISTER_SYSTEM(THECLASS)                                        \
+	void THECLASS::bind()                                            \
+	{																 \
+		static bool bound = false;                                   \
+		if (bound) return;                                           \
+		auto c = lualite::class_<THECLASS>(ClassName)                \
+		           .constructor()                                    \
+				   .property("name", &THECLASS::name)                \
+				   .def("update", &THECLASS::update)                 \
+
 #define BIND_END()                                                   \
     ;auto m = mcomm::MetaObject::create(ClassName, c);                \
+	LOG(INFO) << "Registering " << ClassName;                         \
     MetaObjectManager::instance().registerClass(m);                   \
     ScriptManager::instance().registerClass(c);                      \
 	bound = true; }
@@ -60,7 +74,7 @@ class MetaObject;
 class Component
 {
 public:
-    void setParent(std::shared_ptr<Entity> const& parent);
+    virtual void setParent(std::shared_ptr<Entity> const& parent);
     virtual std::string name() const = 0;
 
     virtual void loadJson(const jsonxx::Object& o);

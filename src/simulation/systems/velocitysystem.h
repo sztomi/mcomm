@@ -9,13 +9,13 @@ namespace mcomm
 
 class VelocitySystem : public System
 {
+	DECLARE_COMPONENT(VelocitySystem)
 public:
-	std::string toString() const;
 	sf::Vector2f velocity() const;
 
-	void update(float dt);	
+	void update(float dt) override;
 	void setVelocity(const sf::Vector2f& value);
-	
+
 private:
 	sf::Vector2f m_velocity;
 };
