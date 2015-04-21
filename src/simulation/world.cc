@@ -28,9 +28,7 @@ void World::saveJson(std::string const& fileName)
 	jsonxx::Array entities;
 	for (auto& e : m_entities)
 	{
-		LOG(INFO) << "saving " << e->toString();
-		entities << e->toJson();
-		LOG(INFO) << e->toJson().json();
+		entities << jsonxx::Object(e->name(), e->toJson());
 	}
 	output << "entities" << entities;
 

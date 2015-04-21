@@ -11,52 +11,31 @@
 #include "reflection/typeids.h"
 #include "scripting/scriptmanager.h"
 #include "util/constexpr_crc.h"
+#include "util/bind_meta.h"
 
 #include "lua.hpp"
 #include "lualite.hpp"
 
 #define COMPONENT(c) component<c##Component>(#c"Component")
+
 #define SYSTEM(s) system<s##System>(#s"System")
-#define DECLARE_COMPONENT(c) public:                                 \
-    c();                                                             \
-    static constexpr char const* ClassName = #c;                     \
-    static constexpr uint32_t const ClassTypeID = TYPE_ID(ClassName);\
-    std::string name() const override { return ClassName; }                   \
-    std::shared_ptr<MetaObject> metaObject() const override {                   \
-        return MetaObjectManager::instance().getMetaObject(ClassName); \
-    }                                                                \
-    static void bind();                                              \
+
+
+#define DECLARE_COMPONENT(c) public:                                   \
+	DECLARE_BINDABLE2(c)                                                \
+    c();                                                               \
     private:
 
+#define BIND_COMPONENT(THECLASS)                                       \
+	REGISTER_COMPONENT(THECLASS)                                       \
+	BIND_CLASS(THECLASS)
 
-#define BIND_COMPONENT(THECLASS)                                     \
-	REGISTER_COMPONENT(THECLASS)                                     \
-	void THECLASS::bind()                                            \
-	{																 \
-		static bool bound = false;                                   \
-		if (bound) return;                                           \
-		auto c = lualite::class_<THECLASS>(ClassName)                \
-		           .constructor()                                    \
-				   .property("name", &THECLASS::name)                \
+#define BIND_SYSTEM(THECLASS)                                          \
+	REGISTER_SYSTEM(THECLASS)                                          \
+	BIND_CLASS(THECLASS)                                               \
+		   .def("update", &THECLASS::update)
 
 
-#define BIND_SYSTEM(THECLASS)                                        \
-	REGISTER_SYSTEM(THECLASS)                                        \
-	void THECLASS::bind()                                            \
-	{																 \
-		static bool bound = false;                                   \
-		if (bound) return;                                           \
-		auto c = lualite::class_<THECLASS>(ClassName)                \
-		           .constructor()                                    \
-				   .property("name", &THECLASS::name)                \
-				   .def("update", &THECLASS::update)                 \
-
-#define BIND_END()                                                   \
-    ;auto m = mcomm::MetaObject::create(ClassName, c);                \
-	LOG(INFO) << "Registering " << ClassName;                         \
-    MetaObjectManager::instance().registerClass(m);                   \
-    ScriptManager::instance().registerClass(c);                      \
-	bound = true; }
 
 namespace jsonxx
 {

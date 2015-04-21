@@ -22,6 +22,8 @@ std::string Entity::toString() const
     return boost::str(boost::format("%1% [%2%]") % m_name % m_id);
 }
 
+std::string Entity::name() const { return m_name; }
+
 void Entity::update(float dt)
 {
     for (auto& s : m_systems)
@@ -53,12 +55,12 @@ jsonxx::Object Entity::toJson() const
 
 	for (auto& c : m_components)
 	{
-		components << c.second->name() << c.second->toJson();
+		components << jsonxx::Object(c.second->name(), c.second->toJson());
 	}
 
 	for (auto& s : m_systems)
 	{
-		systems << s.second->name() << s.second->toJson();
+		systems << jsonxx::Object(s.second->name(), s.second->toJson());
 	}
 
 	result << "name" << m_name;

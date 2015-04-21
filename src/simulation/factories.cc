@@ -14,8 +14,8 @@ namespace mcomm
 
 ComponentFactory& ComponentFactory::instance()
 {
-    static ComponentFactory inst;
-    return inst;
+	static ComponentFactory inst;
+	return inst;
 }
 
 void ComponentFactory::registerClass(const std::string& name,

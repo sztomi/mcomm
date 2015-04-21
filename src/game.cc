@@ -14,6 +14,7 @@
 #include "simulation/components/spritecomponent.h"
 #include "simulation/components/transformcomponent.h"
 #include "simulation/components/speedcomponent.h"
+#include "media/animationframe.h"
 
 namespace mcomm
 {
@@ -21,6 +22,8 @@ namespace mcomm
 Game::Game() : state(GameState::PRERUN)
 {
 	m_renderWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(800, 600), "mcomm");
+	m_renderWindow->setFramerateLimit(60);
+	m_renderWindow->setVerticalSyncEnabled(true);
 }
 
 std::shared_ptr<sf::RenderWindow> Game::renderWindow() const
@@ -31,6 +34,7 @@ std::shared_ptr<sf::RenderWindow> Game::renderWindow() const
 void Game::setup()
 {
 	TextureManager::instance().addTexture("res/sprites1.png", "sprite1");
+	std::shared_ptr<void> af = ObjectFactory::instance().create<AnimationFrame>("AnimationFrame");
 	auto player = EntityFactory::instance().createNew("Player");
 	player->attachComponent("DrawableComponent");
 	player->attachComponent("SpriteComponent");

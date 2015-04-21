@@ -26,6 +26,8 @@ jsonxx::Object Component::toJson()
     auto property_names = M->propertyNames();
     for (auto& prop : property_names)
     {
+		if (prop == "name") { continue; }
+
         auto t_id = M->propertyTypeID(prop);
         switch (t_id)
         {

@@ -13,6 +13,7 @@
 
 #define REGISTER_COMPONENT(CLASS) static const RegisterComponent<CLASS> FactoryRegister{CLASS::ClassName};
 #define REGISTER_SYSTEM(CLASS) static const RegisterSystem<CLASS> FactoryRegister{CLASS::ClassName};
+#define REGISTER_CLASS(CLASS) static const RegisterClass<CLASS> FactoryRegister{CLASS::ClassName};
 
 namespace mcomm
 {
@@ -20,6 +21,56 @@ namespace mcomm
 class Component;
 class System;
 class Entity;
+
+class ObjectFactory
+{
+public:
+    typedef std::function<void* ()> FactoryFunc;
+
+    static ObjectFactory& instance()
+	{
+		static ObjectFactory inst;
+		return inst;
+	}
+
+    void registerClass(const std::string& name, const FactoryFunc& create_func)
+	{
+		m_functions.emplace(name, create_func);
+	}
+
+	template<typename T>
+    std::shared_ptr<T> create(const std::string& type)
+	{
+		auto func = m_functions.find(type);
+
+		if (func == std::end(m_functions))
+		{
+			LOG(ERROR) << "Unregistered component: " << type << std::endl;
+			return std::shared_ptr<T>();
+		}
+
+		return std::shared_ptr<T>(reinterpret_cast<T*>(func->second()));
+	}
+
+private:
+    std::unordered_map<std::string, FactoryFunc> m_functions;
+};
+
+template<class T>
+class RegisterClass
+{
+public:
+    RegisterClass(const std::string& name)
+    {
+        ObjectFactory::instance().registerClass(name,
+                []() -> void*
+                {
+                    return reinterpret_cast<void*>(new T);
+                });
+
+        MetaObjectManager::instance().registerBindFunction(&T::bind);
+    }
+};
 
 class ComponentFactory
 {

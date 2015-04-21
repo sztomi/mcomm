@@ -1,4 +1,5 @@
 #include "animationframescomponent.h"
+#include "util/bind_meta.h"
 
 namespace mcomm
 {

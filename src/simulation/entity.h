@@ -24,6 +24,7 @@ public:
 
 	int id() const;
 	std::string toString() const;
+	std::string name() const;
 
 	void update(float dt);
 
