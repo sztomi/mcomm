@@ -12,55 +12,6 @@ using namespace jsonxx;
 namespace mcomm
 {
 
-ComponentFactory& ComponentFactory::instance()
-{
-	static ComponentFactory inst;
-	return inst;
-}
-
-void ComponentFactory::registerClass(const std::string& name,
-									 const CompFactoryFunc& create_func)
-{
-    m_functions.emplace(name, create_func);
-}
-
-std::shared_ptr<Component> ComponentFactory::create(const std::string& type)
-{
-    auto func = m_functions.find(type);
-
-    if (func == std::end(m_functions))
-    {
-        LOG(ERROR) << "Unregistered component: " << type << std::endl;
-        return std::shared_ptr<Component>();
-    }
-
-    return func->second();
-}
-
-SystemFactory& SystemFactory::instance()
-{
-    static SystemFactory inst;
-    return inst;
-}
-
-void SystemFactory::registerClass(const std::string& name, SysFactoryFunc const& create_func)
-{
-    m_functions.emplace(name, create_func);
-}
-
-std::shared_ptr<System> SystemFactory::create(const std::string& type)
-{
-    auto func = m_functions.find(type);
-
-    if (func == std::end(m_functions))
-    {
-        LOG(ERROR) << "Unregistered system: " << type << std::endl;
-        return std::shared_ptr<System>();
-    }
-
-    return func->second();
-}
-
 std::shared_ptr<Entity> EntityFactory::createNew(const std::string& name)
 {
     return std::make_shared<Entity>(m_ids++, name);

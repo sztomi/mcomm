@@ -14,6 +14,7 @@
 #include "simulation/components/spritecomponent.h"
 #include "simulation/components/transformcomponent.h"
 #include "simulation/components/speedcomponent.h"
+#include "simulation/components/animationframescomponent.h"
 #include "media/animationframe.h"
 
 namespace mcomm
@@ -40,6 +41,7 @@ void Game::setup()
 	player->attachComponent("SpriteComponent");
 	player->attachComponent("TransformComponent");
 	player->attachComponent("SpeedComponent");
+	player->attachComponent("AnimationFramesComponent");
 
 	player->COMPONENT(Sprite)->setTextureId("sprite1");
 
@@ -54,6 +56,11 @@ void Game::setup()
 	auto speed = player->COMPONENT(Speed);
 	speed->setX(60.0f);
 	speed->setY(60.0f);
+
+	auto a = player->COMPONENT(AnimationFrames);
+	a->addFrame({1, 0, 130});
+	a->addFrame({0, 0, 100});
+	a->addFrame({2, 0, 130});
 
 	player->attachSystem("RenderSystem");
 	player->attachSystem("VelocitySystem");

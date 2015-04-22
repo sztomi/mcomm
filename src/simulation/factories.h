@@ -11,8 +11,6 @@
 #include "entity.h"
 #include "reflection/metaobjectmanager.h"
 
-#define REGISTER_COMPONENT(CLASS) static const RegisterComponent<CLASS> FactoryRegister{CLASS::ClassName};
-#define REGISTER_SYSTEM(CLASS) static const RegisterSystem<CLASS> FactoryRegister{CLASS::ClassName};
 #define REGISTER_CLASS(CLASS) static const RegisterClass<CLASS> FactoryRegister{CLASS::ClassName};
 
 namespace mcomm
@@ -45,7 +43,7 @@ public:
 
 		if (func == std::end(m_functions))
 		{
-			LOG(ERROR) << "Unregistered component: " << type << std::endl;
+			LOG(ERROR) << "Unregistered class: " << type << std::endl;
 			return std::shared_ptr<T>();
 		}
 
@@ -71,65 +69,6 @@ public:
         MetaObjectManager::instance().registerBindFunction(&T::bind);
     }
 };
-
-class ComponentFactory
-{
-public:
-    typedef std::function<std::shared_ptr<Component> ()> CompFactoryFunc;
-
-    static ComponentFactory& instance();
-    void registerClass(const std::string& name, const CompFactoryFunc& create_func);
-    std::shared_ptr<Component> create(const std::string& type);
-
-private:
-    std::unordered_map<std::string, CompFactoryFunc> m_functions;
-};
-
-template<class T>
-class RegisterComponent
-{
-public:
-    RegisterComponent(const std::string& name)
-    {
-        ComponentFactory::instance().registerClass(name,
-                []() -> std::shared_ptr<Component>
-                {
-                    return std::make_shared<T>();
-                });
-
-        MetaObjectManager::instance().registerBindFunction(&T::bind);
-    }
-};
-
-class SystemFactory
-{
-public:
-    typedef std::function<std::shared_ptr<System>()> SysFactoryFunc;
-
-    static SystemFactory& instance();
-    void registerClass(const std::string& name, const SysFactoryFunc& create_func);
-    std::shared_ptr<System> create(const std::string& type);
-
-private:
-    std::unordered_map<std::string, SysFactoryFunc> m_functions;
-};
-
-template<class T>
-class RegisterSystem
-{
-public:
-    RegisterSystem(const std::string& name)
-    {
-        SystemFactory::instance().registerClass(name,
-                []() -> std::shared_ptr<System>
-                {
-                    return std::make_shared<T>();
-                });
-
-        MetaObjectManager::instance().registerBindFunction(&T::bind);
-    }
-};
-
 
 class EntityFactory
 {

@@ -14,6 +14,7 @@
 #include "glog/logging.h"
 #include "lualite.hpp"
 #include "scripting/scriptmanager.h"
+#include "jsonxx.h"
 
 namespace mcomm
 {
@@ -134,6 +135,43 @@ public:
 
         return result;
     }
+
+
+    #define HANDLE_CASE(TYPE)                                  \
+            case _CRC32(#TYPE):                                \
+            {                                                  \
+                union                                          \
+                {                                              \
+                    lualite::detail::member_func_type mf;      \
+                    TYPE (C::*f)();                            \
+                } pfunc;                                       \
+                                                               \
+                pfunc.mf = entry.second.func;                  \
+                auto value = ((obj).*(pfunc.f))();			   \
+				result << entry.first << value;  \
+            }                                                  \
+            break;
+
+	template<typename C>
+	jsonxx::Object toJson(C& obj)
+	{
+		jsonxx::Object result;
+		for (auto& entry : m_getters)
+		{
+			LOG(INFO) << "prop " << entry.first;
+            switch (entry.second.return_type_id)
+            {
+            HANDLE_CASE(int)
+			HANDLE_CASE(unsigned int)
+			HANDLE_CASE(double)
+			HANDLE_CASE(float)
+			HANDLE_CASE(bool)
+			HANDLE_CASE(std::string)
+            }
+		}
+		return result;
+	}
+    #undef HANDLE_CASE
 
 
 

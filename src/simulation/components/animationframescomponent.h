@@ -20,6 +20,8 @@ public:
 
     AnimationFrame frame(int index);
 
+    jsonxx::Object toJson() override;
+
 private:
     std::vector<AnimationFrame> m_frames;
 };

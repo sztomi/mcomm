@@ -1,5 +1,8 @@
 #include "animationframescomponent.h"
 #include "util/bind_meta.h"
+#include "reflection/metaobjectmanager.h"
+
+#include "jsonxx.h"
 
 namespace mcomm
 {
@@ -26,6 +29,22 @@ void AnimationFramesComponent::addFrame(const AnimationFrame& frame)
 AnimationFrame AnimationFramesComponent::frame(int index)
 {
 	return m_frames[index];
+}
+
+
+jsonxx::Object AnimationFramesComponent::toJson()
+{
+	jsonxx::Object result = Component::toJson();
+	jsonxx::Array frames;
+	auto af_meta = MetaObjectManager::instance().getMetaObject("AnimationFrame");
+	for (auto& f : m_frames)
+	{
+		frames << af_meta->toJson(f);
+	}
+
+	result << jsonxx::Object("frames", frames);
+
+	return result;
 }
 
 

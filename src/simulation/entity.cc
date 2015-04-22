@@ -34,7 +34,7 @@ void Entity::update(float dt)
 
 std::shared_ptr<Component> Entity::attachComponent(const std::string& type)
 {
-    auto c = ComponentFactory::instance().create(type);
+    auto c = ObjectFactory::instance().create<Component>(type);
     m_components[type] = c;
     c->setParent(shared_from_this());
     return c;
@@ -42,7 +42,7 @@ std::shared_ptr<Component> Entity::attachComponent(const std::string& type)
 
 std::shared_ptr<System> Entity::attachSystem(const std::string& type)
 {
-    auto s = SystemFactory::instance().create(type);
+    auto s = ObjectFactory::instance().create<System>(type);
     m_systems[type] = s;
     s->setParent(shared_from_this());
     return s;

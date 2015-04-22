@@ -22,16 +22,16 @@
 
 
 #define DECLARE_COMPONENT(c) public:                                   \
-	DECLARE_BINDABLE2(c)                                                \
+	DECLARE_BINDABLE2(c)                                               \
     c();                                                               \
     private:
 
 #define BIND_COMPONENT(THECLASS)                                       \
-	REGISTER_COMPONENT(THECLASS)                                       \
+	REGISTER_CLASS(THECLASS)                                           \
 	BIND_CLASS(THECLASS)
 
 #define BIND_SYSTEM(THECLASS)                                          \
-	REGISTER_SYSTEM(THECLASS)                                          \
+	REGISTER_CLASS(THECLASS)                                           \
 	BIND_CLASS(THECLASS)                                               \
 		   .def("update", &THECLASS::update)
 
