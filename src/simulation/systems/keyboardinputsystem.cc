@@ -5,6 +5,8 @@
 #include "keyboardinputsystem.h"
 #include "velocitysystem.h"
 
+#include "glog/logging.h"
+
 namespace mcomm
 {
 

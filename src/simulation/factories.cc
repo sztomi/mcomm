@@ -33,8 +33,10 @@ std::shared_ptr<Entity> EntityFactory::createNew(const std::string& name, const 
          ++i)
     {
         auto c = components.get<Object>(i);
-        auto name = c.get<String>("name");
-        entity->attachComponent(name)->loadJson(c);
+		auto oo = begin(c.kv_map());
+        auto name = oo->first;
+		LOG(INFO) << name;
+        entity->attachComponent(name)->loadJson(oo->second->get<Object>());
     }
 
     auto systems = o.get<Array>("systems");
@@ -44,8 +46,9 @@ std::shared_ptr<Entity> EntityFactory::createNew(const std::string& name, const 
          ++i)
     {
         auto s = systems.get<Object>(i);
-        auto name = s.get<String>("name");
-        entity->attachSystem(name)->loadJson(s);
+		auto oo = begin(s.kv_map());
+        auto name = oo->first;
+        entity->attachSystem(name)->loadJson(oo->second->get<Object>());
     }
 
     return entity;

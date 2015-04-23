@@ -22,6 +22,8 @@ public:
 
     jsonxx::Object toJson() override;
 
+	void loadJson(const jsonxx::Object& o) override;
+
 private:
     std::vector<AnimationFrame> m_frames;
 };

@@ -50,6 +50,28 @@ public:
 		return std::shared_ptr<T>(reinterpret_cast<T*>(func->second()));
 	}
 
+	template<typename T>
+    std::shared_ptr<T> create(const std::string& type, jsonxx::Object& obj)
+	{
+		auto func = m_functions.find(type);
+
+		if (func == std::end(m_functions))
+		{
+			LOG(ERROR) << "Unregistered class: " << type << std::endl;
+			return std::shared_ptr<T>();
+		}
+
+		auto result = std::shared_ptr<T>(reinterpret_cast<T*>(func->second()));
+		auto meta = MetaObjectManager::instance().getMetaObject(type);
+
+		for (auto const& kv : obj.kv_map())
+		{
+			meta->setProperty(result.get(), kv.first, kv.second->get<std::string>());
+		}
+
+		return result;
+	}
+
 private:
     std::unordered_map<std::string, FactoryFunc> m_functions;
 };

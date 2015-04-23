@@ -42,12 +42,17 @@ void World::loadJson(const std::string& fileName)
 	jsonxx::Object worldjson;
 	worldjson.parse(f);
 
-	//for (auto& e : entities.children())
-	//{
-		//auto entity = EntityFactory::instance().createNew(e.name(), e);
-		//std::cout << entity->toString() << std::endl;
-		//addEntity(entity);
-	//}
+	auto entities = worldjson.get<jsonxx::Array>("entities");
+
+	for (std::size_t i = 0; i < entities.size(); ++i)
+	{
+		auto e = entities.get<jsonxx::Object>(i);
+		auto name = begin(e.kv_map())->first;
+		auto obj = begin(e.kv_map())->second->get<jsonxx::Object>();
+		LOG(INFO) << e.json();
+		auto entity = EntityFactory::instance().createNew(name, obj);
+		addEntity(entity);
+	}
 }
 
 }

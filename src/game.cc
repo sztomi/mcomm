@@ -35,6 +35,8 @@ std::shared_ptr<sf::RenderWindow> Game::renderWindow() const
 void Game::setup()
 {
 	TextureManager::instance().addTexture("res/sprites1.png", "sprite1");
+
+	/*
 	std::shared_ptr<void> af = ObjectFactory::instance().create<AnimationFrame>("AnimationFrame");
 	auto player = EntityFactory::instance().createNew("Player");
 	player->attachComponent("DrawableComponent");
@@ -64,10 +66,13 @@ void Game::setup()
 
 	player->attachSystem("RenderSystem");
 	player->attachSystem("VelocitySystem");
+	player->attachSystem("SpriteAnimationSystem");
+	player->attachSystem("KeyboardInputSystem");
 
 	world.addEntity(player);
+	*/
 
-	world.saveJson("level1.json");
+	world.loadJson("level1.json");
 	//world.loadJson("res/start_entities.xml");
 }
 

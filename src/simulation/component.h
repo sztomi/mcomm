@@ -35,8 +35,6 @@
 	BIND_CLASS(THECLASS)                                               \
 		   .def("update", &THECLASS::update)
 
-
-
 namespace jsonxx
 {
     class Object;

@@ -1,6 +1,7 @@
 #include "animationframescomponent.h"
 #include "util/bind_meta.h"
 #include "reflection/metaobjectmanager.h"
+#include "simulation/factories.h"
 
 #include "jsonxx.h"
 
@@ -31,7 +32,6 @@ AnimationFrame AnimationFramesComponent::frame(int index)
 	return m_frames[index];
 }
 
-
 jsonxx::Object AnimationFramesComponent::toJson()
 {
 	jsonxx::Object result = Component::toJson();
@@ -47,6 +47,18 @@ jsonxx::Object AnimationFramesComponent::toJson()
 	return result;
 }
 
+void AnimationFramesComponent::loadJson(jsonxx::Object const& o)
+{
+	auto frames = o.get<jsonxx::Array>("frames");
+	auto af_meta = MetaObjectManager::instance().getMetaObject("AnimationFrame");
+	m_frames.clear();
+	for (std::size_t i = 0; i < frames.size(); ++i)
+	{
+		auto f = frames.get<jsonxx::Object>(i);
+		auto frame = ObjectFactory::instance().create<AnimationFrame>("AnimationFrame", f);
+		m_frames.push_back(*frame);
+	}
+}
 
 
 }

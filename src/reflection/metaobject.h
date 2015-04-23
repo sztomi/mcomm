@@ -83,6 +83,45 @@ public:
                    << ". Read-only property?";
     }
 
+    #define HANDLE_CASE(TYPE)                                         \
+            case _CRC32(#TYPE):                                       \
+            {                                                         \
+                union                                                 \
+                {                                                     \
+                    lualite::detail::member_func_type mf;             \
+                    TYPE (C::*f)(TYPE);                               \
+                } pfunc;                                              \
+                                                                      \
+                pfunc.mf = entry->second.func;                        \
+				auto real_value = boost::lexical_cast<TYPE>(value);   \
+                ((instance)->*(pfunc.f))(real_value);                 \
+            }                                                         \
+            break;
+
+    template<class C>
+    void setProperty(C* instance, std::string const& name, std::string const& value)
+    {
+        auto entry = m_setters.find(name);
+        if (entry != end(m_setters))
+        {
+			auto t_id = propertyTypeID(name);
+			switch(t_id)
+			{
+            HANDLE_CASE(int)
+            HANDLE_CASE(unsigned int)
+            HANDLE_CASE(double)
+            HANDLE_CASE(float)
+            HANDLE_CASE(bool)
+            HANDLE_CASE(std::string)
+			}
+        }
+
+        LOG(ERROR) << "Could not find setter for property "
+                   << name
+                   << ". Read-only property?";
+    }
+    #undef HANDLE_CASE
+
     #define HANDLE_CASE(TYPE)                                  \
             case _CRC32(#TYPE):                                \
             {                                                  \
@@ -92,7 +131,7 @@ public:
                     TYPE (C::*f)();                            \
                 } pfunc;                                       \
                                                                \
-                pfunc.mf = entry->second.func;                      \
+                pfunc.mf = entry->second.func;                 \
                 auto value = ((instance)->*(pfunc.f))();       \
                 return boost::lexical_cast<std::string>(value);\
             }                                                  \
