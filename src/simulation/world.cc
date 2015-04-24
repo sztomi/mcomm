@@ -5,6 +5,7 @@
 #include "world.h"
 #include "entity.h"
 #include "factories.h"
+#include "simulation/components/transformcomponent.h"
 
 namespace mcomm
 {
@@ -49,10 +50,10 @@ void World::loadJson(const std::string& fileName)
 		auto e = entities.get<jsonxx::Object>(i);
 		auto name = begin(e.kv_map())->first;
 		auto obj = begin(e.kv_map())->second->get<jsonxx::Object>();
-		LOG(INFO) << e.json();
 		auto entity = EntityFactory::instance().createNew(name, obj);
 		addEntity(entity);
 	}
+
 }
 
 }

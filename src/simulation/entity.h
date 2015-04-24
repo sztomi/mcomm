@@ -1,6 +1,6 @@
 #pragma once
 
-#include <unordered_map>
+#include <map>
 #include <memory>
 #include <string>
 #include <iostream>
@@ -51,8 +51,8 @@ public:
 private:
 	int m_id;
 	std::string m_name;
-	std::unordered_map<std::string, std::shared_ptr<Component>> m_components;
-	std::unordered_map<std::string, std::shared_ptr<System>> m_systems;
+	std::map<std::string, std::shared_ptr<Component>> m_components;
+	std::map<std::string, std::shared_ptr<System>> m_systems;
 };
 
 }

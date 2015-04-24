@@ -35,8 +35,11 @@ std::shared_ptr<Entity> EntityFactory::createNew(const std::string& name, const 
         auto c = components.get<Object>(i);
 		auto oo = begin(c.kv_map());
         auto name = oo->first;
-		LOG(INFO) << name;
         entity->attachComponent(name)->loadJson(oo->second->get<Object>());
+		if (name == "TransformComponent")
+		{
+			LOG(INFO) << oo->second->get<Object>().json();
+		}
     }
 
     auto systems = o.get<Array>("systems");

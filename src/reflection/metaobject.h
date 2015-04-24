@@ -89,7 +89,7 @@ public:
                 union                                                 \
                 {                                                     \
                     lualite::detail::member_func_type mf;             \
-                    TYPE (C::*f)(TYPE);                               \
+                    void (C::*f)(TYPE);                               \
                 } pfunc;                                              \
                                                                       \
                 pfunc.mf = entry->second.func;                        \
@@ -112,13 +112,26 @@ public:
             HANDLE_CASE(double)
             HANDLE_CASE(float)
             HANDLE_CASE(bool)
-            HANDLE_CASE(std::string)
+			case _CRC32("std::string"):
+			{
+                union
+                {
+                    lualite::detail::member_func_type mf;
+					void (C::*f)(std::string);
+                } pfunc;
+
+                pfunc.mf = entry->second.func;
+                ((instance)->*(pfunc.f))(value);
+			}
+			break;
 			}
         }
-
-        LOG(ERROR) << "Could not find setter for property "
-                   << name
-                   << ". Read-only property?";
+		else
+		{
+			LOG(ERROR) << "Could not find setter for property "
+					   << name
+					   << ". Read-only property?";
+		}
     }
     #undef HANDLE_CASE
 
@@ -192,12 +205,12 @@ public:
             break;
 
 	template<typename C>
-	jsonxx::Object toJson(C& obj)
+	jsonxx::Object jsonSerialize(C& obj)
 	{
 		jsonxx::Object result;
 		for (auto& entry : m_getters)
 		{
-			LOG(INFO) << "prop " << entry.first;
+			if (entry.first == "name") { continue; }
             switch (entry.second.return_type_id)
             {
             HANDLE_CASE(int)

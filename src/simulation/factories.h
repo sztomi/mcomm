@@ -3,6 +3,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <sstream>
 #include <unordered_map>
 
 #include "glog/logging.h"
@@ -66,7 +67,10 @@ public:
 
 		for (auto const& kv : obj.kv_map())
 		{
-			meta->setProperty(result.get(), kv.first, kv.second->get<std::string>());
+			std::stringstream ss;
+			ss << *(kv.second);
+			auto prop_str_value = ss.str();
+			meta->setProperty(result.get(), kv.first, prop_str_value);
 		}
 
 		return result;

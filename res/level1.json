@@ -1,0 +1,83 @@
+{
+  "entities": [
+    {
+      "Player": {
+        "components": [
+          {
+            "AnimationFramesComponent": {
+              "frames": [
+                {
+                  "AnimationFrame": {
+                    "frameLength": 130,
+                    "texcoord_x": 1,
+                    "texcoord_y": 0
+                  }
+                },
+                {
+                  "AnimationFrame": {
+                    "frameLength": 100,
+                    "texcoord_x": 0,
+                    "texcoord_y": 0
+                  }
+                },
+                {
+                  "AnimationFrame": {
+                    "frameLength": 130,
+                    "texcoord_x": 2,
+                    "texcoord_y": 0
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "DrawableComponent": {
+            }
+          },
+          {
+            "SpeedComponent": {
+              "x": 60,
+              "y": 60
+            }
+          },
+          {
+            "SpriteComponent": {
+              "spriteCoordX": 0,
+              "spriteCoordY": 0,
+              "textureId": "sprite1"
+            }
+          },
+          {
+            "TransformComponent": {
+              "origin_x": 16,
+              "origin_y": 16,
+              "position_x": 300,
+              "position_y": 300,
+              "scale_x": 4,
+              "scale_y": 4
+            }
+          }
+        ],
+        "name": "Player",
+        "systems": [
+          {
+            "KeyboardInputSystem": {
+            }
+          },
+          {
+            "RenderSystem": {
+            }
+          },
+          {
+            "SpriteAnimationSystem": {
+            }
+          },
+          {
+            "VelocitySystem": {
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

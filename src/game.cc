@@ -35,8 +35,7 @@ std::shared_ptr<sf::RenderWindow> Game::renderWindow() const
 void Game::setup()
 {
 	TextureManager::instance().addTexture("res/sprites1.png", "sprite1");
-
-	/*
+/*
 	std::shared_ptr<void> af = ObjectFactory::instance().create<AnimationFrame>("AnimationFrame");
 	auto player = EntityFactory::instance().createNew("Player");
 	player->attachComponent("DrawableComponent");
@@ -70,10 +69,11 @@ void Game::setup()
 	player->attachSystem("KeyboardInputSystem");
 
 	world.addEntity(player);
-	*/
 
-	world.loadJson("level1.json");
+	world.saveJson("level1.json");*/
+	world.loadJson("res/level1.json");
 	//world.loadJson("res/start_entities.xml");
+	//world.saveJson("level_saved.json");
 }
 
 void Game::run()
@@ -91,6 +91,7 @@ void Game::run()
 		switch (event.type)
 		{
 		case sf::Event::Closed:
+			LOG(INFO) << "Closed event received";
 			state = GameState::EXITING;
 			break;
 		default:

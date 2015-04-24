@@ -39,10 +39,10 @@ jsonxx::Object AnimationFramesComponent::toJson()
 	auto af_meta = MetaObjectManager::instance().getMetaObject("AnimationFrame");
 	for (auto& f : m_frames)
 	{
-		frames << af_meta->toJson(f);
+		frames << jsonxx::Object("AnimationFrame", af_meta->jsonSerialize(f));
 	}
 
-	result << jsonxx::Object("frames", frames);
+	result << "frames" << frames;
 
 	return result;
 }
@@ -54,7 +54,7 @@ void AnimationFramesComponent::loadJson(jsonxx::Object const& o)
 	m_frames.clear();
 	for (std::size_t i = 0; i < frames.size(); ++i)
 	{
-		auto f = frames.get<jsonxx::Object>(i);
+		auto f = frames.get<jsonxx::Object>(i).get<jsonxx::Object>("AnimationFrame");
 		auto frame = ObjectFactory::instance().create<AnimationFrame>("AnimationFrame", f);
 		m_frames.push_back(*frame);
 	}

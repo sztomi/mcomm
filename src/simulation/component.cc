@@ -61,6 +61,7 @@ void Component::loadJson(const jsonxx::Object& o)
     auto property_names = M->propertyNames();
     for (auto& prop : property_names)
     {
+		if (prop == "name") { continue; }
         auto t_id = M->propertyTypeID(prop);
         switch (t_id)
         {
