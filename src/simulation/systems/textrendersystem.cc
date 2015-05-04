@@ -1,5 +1,4 @@
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
+#include "precompiled.h"
 
 #include "game.h"
 #include "simulation/components/fontcomponent.h"

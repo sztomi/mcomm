@@ -1,21 +1,7 @@
-#include <algorithm>
-#include <memory>
-
-#include <SFML/System/Clock.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Window/Event.hpp>
+#include "precompiled.h"
 
 #include "game.h"
 #include "media/texturemanager.h"
-#include "simulation/collisiongrid.h"
-#include "simulation/entity.h"
-#include "simulation/factories.h"
-#include "simulation/component.h"
-#include "simulation/components/spritecomponent.h"
-#include "simulation/components/transformcomponent.h"
-#include "simulation/components/speedcomponent.h"
-#include "simulation/components/animationframescomponent.h"
-#include "media/animationframe.h"
 
 namespace mcomm
 {
@@ -73,7 +59,7 @@ void Game::setup()
 	world.saveJson("level1.json");*/
 	world.loadJson("res/level1.json");
 	//world.loadJson("res/start_entities.xml");
-	//world.saveJson("level_saved.json");
+	world.saveJson("level_saved.json");
 }
 
 void Game::run()
@@ -107,8 +93,6 @@ void Game::run()
 void Game::runStep(float frameTime)
 {
 	const float timeStep = 0.1f;
-
-    CollisionGrid::instance().clearAll();
 
 	while (frameTime > 0.0f)
 	{

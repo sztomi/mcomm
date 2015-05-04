@@ -1,3 +1,4 @@
+#include "precompiled.h"
 #include "spriteanimationsystem.h"
 
 #include "simulation/components/animationframescomponent.h"

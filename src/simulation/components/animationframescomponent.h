@@ -1,10 +1,8 @@
 #pragma once
 
-#include <vector>
-
-#include "media/animationframe.h"
+#include "precompiled.h"
 #include "simulation/component.h"
-
+#include "media/animationframe.h"
 
 namespace mcomm
 {

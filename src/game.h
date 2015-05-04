@@ -1,7 +1,6 @@
 #pragma once
 
-#include <memory>
-
+#include "precompiled.h"
 #include "simulation/world.h"
 
 namespace sf

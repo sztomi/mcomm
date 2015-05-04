@@ -1,9 +1,6 @@
 #pragma once
 
-#include <memory>
-
-#include <SFML/Graphics/Text.hpp>
-
+#include "precompiled.h"
 #include "simulation/component.h"
 
 namespace sf

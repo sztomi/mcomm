@@ -1,7 +1,7 @@
 #pragma once
 
-#include <SFML/System/Clock.hpp>
-#include "simulation/system.h"
+#include "precompiled.h"
+#include "simulation/component.h"
 
 namespace mcomm
 {

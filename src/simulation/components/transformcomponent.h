@@ -1,8 +1,7 @@
 #pragma once
 
-#include "SFML/Graphics/Transformable.hpp"
-
-#include "../component.h"
+#include "precompiled.h"
+#include "simulation/component.h"
 
 namespace mcomm
 {

@@ -1,3 +1,5 @@
+#include "precompiled.h"
+
 #include "velocitysystem.h"
 #include "spriteanimationsystem.h"
 #include "simulation/components/transformcomponent.h"

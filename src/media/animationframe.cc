@@ -1,16 +1,12 @@
+#include "precompiled.h"
 #include "animationframe.h"
-#include "util/constexpr_crc.h"
-#include "util/bind_meta.h"
-#include "glog/logging.h"
-
 #include "simulation/factories.h"
+#include "util/bind_meta.h"
 
 namespace mcomm
 {
 
-REGISTER_CLASS(AnimationFrame)
-
-BIND_CLASS(AnimationFrame)
+BIND_GENERIC(AnimationFrame)
 	.property("texcoord_x",
 			  &AnimationFrame::texCoordX,
 			  &AnimationFrame::setTexCoordX)
@@ -32,13 +28,5 @@ AnimationFrame::AnimationFrame(int x, int y, int length)
 {
 
 }
-
-int AnimationFrame::texCoordX() const { return m_texCoordX; }
-int AnimationFrame::texCoordY() const { return m_texCoordY; }
-int AnimationFrame::frameLength() const { return m_frameLength; }
-
-void AnimationFrame::setTexCoordX(int value) { m_texCoordX = value; }
-void AnimationFrame::setTexCoordY(int value) { m_texCoordY = value; }
-void AnimationFrame::setFrameLength(int value) { m_frameLength = value; }
 
 }

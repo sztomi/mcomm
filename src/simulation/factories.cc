@@ -1,11 +1,5 @@
-#include <iostream>
-
-#include "jsonxx.h"
-#include "glog/logging.h"
-
-#include "component.h"
+#include "precompiled.h"
 #include "factories.h"
-#include "system.h"
 
 using namespace jsonxx;
 
@@ -36,10 +30,6 @@ std::shared_ptr<Entity> EntityFactory::createNew(const std::string& name, const 
 		auto oo = begin(c.kv_map());
         auto name = oo->first;
         entity->attachComponent(name)->loadJson(oo->second->get<Object>());
-		if (name == "TransformComponent")
-		{
-			LOG(INFO) << oo->second->get<Object>().json();
-		}
     }
 
     auto systems = o.get<Array>("systems");

@@ -1,10 +1,6 @@
 #pragma once
 
-#include <map>
-#include <memory>
-#include <string>
-#include <iostream>
-#include <string>
+#include "precompiled.h"
 
 namespace jsonxx { class Object; }
 
@@ -32,7 +28,10 @@ public:
 	std::shared_ptr<T> component(const std::string& typeStr)
 	{
 		if (m_components.count(typeStr) == 0)
+		{
+			LOG(ERROR) << typeStr << " not found in entity.";
 			return std::shared_ptr<T>();
+		}
 		else
 			return std::static_pointer_cast<T>(m_components[typeStr]);
 	}
@@ -41,7 +40,10 @@ public:
 	std::shared_ptr<T> system(const std::string& type)
 	{
 		if (m_systems.count(type) == 0)
+		{
+			LOG(ERROR) << type << " not found in entity.";
 			return std::shared_ptr<T>();
+		}
 		else
 			return std::static_pointer_cast<T>(m_systems[type]);
 	}

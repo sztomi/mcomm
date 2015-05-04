@@ -1,4 +1,4 @@
-#include <SFML/Graphics/RenderWindow.hpp>
+#include "precompiled.h"
 
 #include "rendersystem.h"
 #include "simulation/components/drawablecomponent.h"

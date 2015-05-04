@@ -1,11 +1,5 @@
-#include <boost/format.hpp>
-
-#include "jsonxx.h"
-
-#include "simulation/components/drawablecomponent.h"
-#include "simulation/factories.h"
-
-#include <lualite.hpp>
+#include "precompiled.h"
+#include "drawablecomponent.h"
 
 using namespace jsonxx;
 using namespace lualite;

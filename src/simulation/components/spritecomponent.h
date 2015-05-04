@@ -1,7 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics/Sprite.hpp>
-
+#include "precompiled.h"
 #include "simulation/component.h"
 
 namespace sf

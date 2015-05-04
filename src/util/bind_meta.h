@@ -1,10 +1,13 @@
 
 // Macros for dynamic binding
 
+#ifndef REGISTER_CLASS
+#define REGISTER_CLASS(CLASS) static const RegisterClass<CLASS> FactoryRegister{CLASS::ClassName};
+#endif
+
 #ifndef DECLARE_BINDABLE
 #define DECLARE_BINDABLE(THECLASS)                                     \
     static constexpr char const* ClassName = #THECLASS;                \
-    static constexpr uint32_t const ClassTypeID = TYPE_ID(ClassName);  \
     std::string name() const { return ClassName; }                     \
     std::shared_ptr<MetaObject> metaObject() const {                   \
         return MetaObjectManager::instance().getMetaObject(ClassName); \
@@ -16,7 +19,6 @@
 #ifndef DECLARE_BINDABLE2
 #define DECLARE_BINDABLE2(THECLASS)                                    \
     static constexpr char const* ClassName = #THECLASS;                \
-    static constexpr uint32_t const ClassTypeID = TYPE_ID(ClassName);  \
     std::string name() const override { return ClassName; }            \
     std::shared_ptr<MetaObject> metaObject() const override {          \
         return MetaObjectManager::instance().getMetaObject(ClassName); \
@@ -47,8 +49,11 @@
 #ifndef BIND_END
 #define BIND_END()                                                     \
     ;auto m = mcomm::MetaObject::create(ClassName, c);                 \
-	LOG(INFO) << "Registering " << ClassName;                          \
     MetaObjectManager::instance().registerClass(m);                    \
     ScriptManager::instance().registerClass(c);                        \
 	bound = true; }
 #endif
+
+#define BIND_GENERIC(THECLASS)    \
+	REGISTER_CLASS(THECLASS)      \
+    BIND_CLASS(THECLASS)

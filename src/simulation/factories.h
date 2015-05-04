@@ -1,18 +1,9 @@
 #pragma once
 
 #include <functional>
-#include <memory>
-#include <string>
-#include <sstream>
-#include <unordered_map>
-
-#include "glog/logging.h"
-#include "jsonxx.h"
-
-#include "entity.h"
 #include "reflection/metaobjectmanager.h"
+#include "reflection/metaobject.h"
 
-#define REGISTER_CLASS(CLASS) static const RegisterClass<CLASS> FactoryRegister{CLASS::ClassName};
 
 namespace mcomm
 {
@@ -51,9 +42,18 @@ public:
 		return std::shared_ptr<T>(reinterpret_cast<T*>(func->second()));
 	}
 
+#define _SWITCH(V) auto VAR = V; if (false) {}
+#define _CASE(TYPE)                                              \
+		else if (VAR == TYPE_ID(TYPE))                           \
+        {                                                        \
+            auto value = static_cast<TYPE>(o.get<Number>(prop)); \
+            M->setProperty(this, prop, value);                   \
+        }
+
 	template<typename T>
-    std::shared_ptr<T> create(const std::string& type, jsonxx::Object& obj)
+    std::shared_ptr<T> create(const std::string& type, jsonxx::Object& o)
 	{
+		using namespace jsonxx;
 		auto func = m_functions.find(type);
 
 		if (func == std::end(m_functions))
@@ -62,16 +62,43 @@ public:
 			return std::shared_ptr<T>();
 		}
 
-		auto result = std::shared_ptr<T>(reinterpret_cast<T*>(func->second()));
+		auto result = create<T>(type);
+
 		auto meta = MetaObjectManager::instance().getMetaObject(type);
 
-		for (auto const& kv : obj.kv_map())
+		for (auto const& kv : o.kv_map())
 		{
 			std::stringstream ss;
 			ss << *(kv.second);
 			auto prop_str_value = ss.str();
-			meta->setProperty(result.get(), kv.first, prop_str_value);
+			meta->setPropertyStr(result.get(), kv.first, prop_str_value);
 		}
+
+		/*
+		auto M = MetaObjectManager::instance().getMetaObject(type);
+		auto property_names = M->propertyNames();
+		for (auto& prop : property_names)
+		{
+			if (prop == "name") { continue; }
+			auto t_id = M->propertyTypeID(prop);
+			_SWITCH(t_id)
+				_CASE(int)
+				_CASE(unsigned int)
+				_CASE(float)
+				_CASE(double)
+                _CASE(bool)
+				else if(t_id == TYPE_ID(std::string))
+				{
+					auto value = static_cast<std::string>(o.get<String>(prop));
+					M->setProperty(result.get(), prop, value);
+				}
+				else
+				{
+					LOG(ERROR) << "Could not deserialize type " << t_id
+							   << "(" << prop << ")";
+				}
+		}
+		*/
 
 		return result;
 	}
@@ -87,7 +114,7 @@ public:
     RegisterClass(const std::string& name)
     {
         ObjectFactory::instance().registerClass(name,
-                []() -> void*
+                [name]() -> void*
                 {
                     return reinterpret_cast<void*>(new T);
                 });
@@ -110,3 +137,6 @@ private:
 };
 
 }
+
+#undef _SWITCH
+#undef _CASE

@@ -1,4 +1,6 @@
-#include <SFML/Graphics/Rect.hpp>
+#pragma once
+
+#include "precompiled.h"
 #include "simulation/component.h"
 
 namespace mcomm

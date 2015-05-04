@@ -1,20 +1,9 @@
 #pragma once
 
-#include <cstdlib>
-#include <iostream>
-#include <memory>
-#include <utility>
-#include <unordered_map>
-#include <string>
-#include <vector>
-
-#include <boost/lexical_cast.hpp>
-#include <boost/format.hpp>
-
-#include "glog/logging.h"
-#include "lualite.hpp"
+#include "precompiled.h"
 #include "scripting/scriptmanager.h"
-#include "jsonxx.h"
+
+#define _SWITCH(V) auto VAR = V; if (false) {}
 
 namespace mcomm
 {
@@ -29,7 +18,9 @@ public:
         : m_name(name),
           m_functions(functions),
           m_getters(getters),
-          m_setters(setters) {}
+          m_setters(setters)
+	{
+	}
 
     template<class C>
     static std::shared_ptr<MetaObject> create(const std::string& name, const lualite::class_<C>& c)
@@ -65,6 +56,7 @@ public:
     void setProperty(C* instance, const std::string& name, T value)
     {
         auto entry = m_setters.find(name);
+		LOG(INFO) << "generic setting " << name << " to " << value;
         if (entry != end(m_setters))
         {
             // unholy black magic follows
@@ -75,68 +67,69 @@ public:
             } pfunc;
 
             pfunc.mf = entry->second.func;
-            return ((instance)->*(pfunc.f))(value);
+            ((instance)->*(pfunc.f))(value);
+			return;
         }
 
         LOG(ERROR) << "Could not find setter for property "
                    << name
                    << ". Read-only property?";
     }
+    #undef _CASE
 
-    #define HANDLE_CASE(TYPE)                                         \
-            case _CRC32(#TYPE):                                       \
-            {                                                         \
-                union                                                 \
-                {                                                     \
-                    lualite::detail::member_func_type mf;             \
-                    void (C::*f)(TYPE);                               \
-                } pfunc;                                              \
-                                                                      \
-                pfunc.mf = entry->second.func;                        \
-				auto real_value = boost::lexical_cast<TYPE>(value);   \
-                ((instance)->*(pfunc.f))(real_value);                 \
-            }                                                         \
-            break;
+    #define _CASE(TYPE)                                            \
+            else if (VAR.hash_code() == TYPE_ID(TYPE).hash_code())                         \
+            {                                                      \
+				LOG(INFO) << #TYPE;\
+                union                                              \
+                {                                                  \
+                    lualite::detail::member_func_type mf;          \
+                    void (C::*f)(TYPE);                            \
+                } pfunc;                                           \
+                                                                   \
+                pfunc.mf = entry->second.func;                     \
+				auto real_value = boost::lexical_cast<TYPE>(value);\
+				LOG(INFO) << real_value;                           \
+                ((instance)->*(pfunc.f))(real_value);              \
+            }
 
     template<class C>
-    void setProperty(C* instance, std::string const& name, std::string const& value)
+    void setPropertyStr(C* instance, std::string const& name, std::string value)
     {
         auto entry = m_setters.find(name);
+		LOG(INFO) << "setting " << name << " to " << value;
+
         if (entry != end(m_setters))
         {
-			auto t_id = propertyTypeID(name);
-			switch(t_id)
-			{
-            HANDLE_CASE(int)
-            HANDLE_CASE(unsigned int)
-            HANDLE_CASE(double)
-            HANDLE_CASE(float)
-            HANDLE_CASE(bool)
-			case _CRC32("std::string"):
-			{
-                union
-                {
-                    lualite::detail::member_func_type mf;
-					void (C::*f)(std::string);
-                } pfunc;
+			LOG(INFO) << name << " " << std::string((*(entry->second.return_type_id)).name(), 4)<< " " << TYPE_ID(int).name();
+            _SWITCH(*(entry->second.return_type_id))
+                _CASE(int)
+                _CASE(unsigned int)
+                _CASE(double)
+                _CASE(float)
+                _CASE(bool)
+                else if (entry->second.return_type_id == TYPE_ID(std::string))
+				{
+					union
+					{
+						lualite::detail::member_func_type mf;
+						void (C::*f)(std::string);
+					} pfunc;
 
-                pfunc.mf = entry->second.func;
-                ((instance)->*(pfunc.f))(value);
-			}
-			break;
-			}
+					pfunc.mf = entry->second.func;
+					((instance)->*(pfunc.f))(value);
+					return;
+				}
         }
-		else
-		{
-			LOG(ERROR) << "Could not find setter for property "
-					   << name
-					   << ". Read-only property?";
-		}
-    }
-    #undef HANDLE_CASE
 
-    #define HANDLE_CASE(TYPE)                                  \
-            case _CRC32(#TYPE):                                \
+		LOG(ERROR) << "Could not find setter for property "
+				   << name
+				   << ". Read-only property?";
+    }
+    #undef _CASE
+
+    #define _CASE(TYPE)                                        \
+            else if (VAR == TYPE_ID(TYPE))                     \
             {                                                  \
                 union                                          \
                 {                                              \
@@ -147,8 +140,7 @@ public:
                 pfunc.mf = entry->second.func;                 \
                 auto value = ((instance)->*(pfunc.f))();       \
                 return boost::lexical_cast<std::string>(value);\
-            }                                                  \
-            break;
+            }
 
     template<class C>
     std::string getPropertyStr(C* instance, const std::string& name)
@@ -156,27 +148,26 @@ public:
         auto entry = m_getters.find(name);
         if (entry != end(m_getters))
         {
-            switch (entry->second.return_type_id)
-            {
-            HANDLE_CASE(int)
-            HANDLE_CASE(unsigned int)
-            HANDLE_CASE(double)
-            HANDLE_CASE(float)
-            HANDLE_CASE(bool)
-            HANDLE_CASE(std::string)
-            }
+            _SWITCH(entry->second.return_type_id)
+                _CASE(int)
+                _CASE(unsigned int)
+                _CASE(double)
+                _CASE(float)
+                _CASE(bool)
+                _CASE(std::string)
         }
-        return "error: unknown return type id";
+		LOG(ERROR) << "error: unknown return type id";
+        throw std::runtime_error("error: unknown return type id");
     }
-    #undef HANDLE_CASE
+    #undef _CASE
 
-    unsigned int propertyTypeID(const std::string& name)
+	std::type_index propertyTypeID(const std::string& name)
     {
         auto entry = m_getters.find(name);
         if (entry != end(m_getters))
-            return entry->second.return_type_id;
+            return *(entry->second.return_type_id);
 
-        return 0;
+		throw std::runtime_error("Unknown property type id ("+name+")");
     }
 
     std::vector<std::string> propertyNames() const
@@ -188,9 +179,8 @@ public:
         return result;
     }
 
-
-    #define HANDLE_CASE(TYPE)                                  \
-            case _CRC32(#TYPE):                                \
+    #define _CASE(TYPE)                                        \
+            else if (VAR == TYPE_ID(TYPE))                     \
             {                                                  \
                 union                                          \
                 {                                              \
@@ -200,9 +190,8 @@ public:
                                                                \
                 pfunc.mf = entry.second.func;                  \
                 auto value = ((obj).*(pfunc.f))();			   \
-				result << entry.first << value;  \
-            }                                                  \
-            break;
+				result << entry.first << value;                \
+            }
 
 	template<typename C>
 	jsonxx::Object jsonSerialize(C& obj)
@@ -211,19 +200,17 @@ public:
 		for (auto& entry : m_getters)
 		{
 			if (entry.first == "name") { continue; }
-            switch (entry.second.return_type_id)
-            {
-            HANDLE_CASE(int)
-			HANDLE_CASE(unsigned int)
-			HANDLE_CASE(double)
-			HANDLE_CASE(float)
-			HANDLE_CASE(bool)
-			HANDLE_CASE(std::string)
-            }
+            _SWITCH(entry.second.return_type_id)
+                _CASE(int)
+			    _CASE(unsigned int)
+			    _CASE(double)
+			    _CASE(float)
+			    _CASE(bool)
+			    _CASE(std::string)
 		}
 		return result;
 	}
-    #undef HANDLE_CASE
+    #undef _CASE
 
 
 
@@ -235,4 +222,6 @@ private:
 };
 
 }
+
+#undef _SWITCH
 

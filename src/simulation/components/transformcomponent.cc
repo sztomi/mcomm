@@ -1,4 +1,4 @@
-#include <lualite.hpp>
+#include "precompiled.h"
 
 #include "transformcomponent.h"
 

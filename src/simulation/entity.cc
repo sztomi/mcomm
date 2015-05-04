@@ -1,9 +1,5 @@
-#include <boost/format.hpp>
-#include "jsonxx.h"
-
+#include "precompiled.h"
 #include "entity.h"
-#include "factories.h"
-#include "system.h"
 
 namespace mcomm
 {
@@ -36,6 +32,7 @@ std::shared_ptr<Component> Entity::attachComponent(const std::string& type)
 {
     auto c = ObjectFactory::instance().create<Component>(type);
     m_components[type] = c;
+	LOG(INFO) << "Adding component:" << type;
     c->setParent(shared_from_this());
     return c;
 }
@@ -45,6 +42,7 @@ std::shared_ptr<System> Entity::attachSystem(const std::string& type)
     auto s = ObjectFactory::instance().create<System>(type);
     m_systems[type] = s;
     s->setParent(shared_from_this());
+	LOG(INFO) << "Adding system:" << type;
     return s;
 }
 

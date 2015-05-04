@@ -1,11 +1,7 @@
 #pragma once
 
-#include <memory>
-
-#include <SFML/Graphics/Drawable.hpp>
-
+#include "precompiled.h"
 #include "simulation/component.h"
-
 
 namespace mcomm
 {

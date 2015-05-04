@@ -1,4 +1,5 @@
 /*
+ *
 ** Copyright (c) 2013, Janez Žemva
 ** All rights reserved.
 **
@@ -38,9 +39,11 @@
 #include <forward_list>
 #include <stdexcept>
 #include <string>
+#include <typeindex>
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
+#include <boost/optional.hpp>
 
 #ifndef LUALITE_NO_STD_CONTAINERS
 
@@ -59,8 +62,6 @@ extern "C" {
 # include "lauxlib.h"
 
 }
-
-#include "reflection/typeids.h"
 
 namespace lualite
 {
@@ -156,7 +157,7 @@ struct func_info_type
 
   lua_CFunction callback;
 
-  unsigned int return_type_id;
+  boost::optional<std::type_index> return_type_id;
 
   void* func;
 };
@@ -165,7 +166,7 @@ struct map_member_info_type
 {
   lua_CFunction callback;
 
-  unsigned int return_type_id;
+  boost::optional<std::type_index> return_type_id;
 
   member_func_type func;
 };
@@ -176,7 +177,7 @@ struct member_info_type
 
   lua_CFunction callback;
 
-  unsigned int return_type_id;
+  boost::optional<std::type_index> return_type_id;
 
   member_func_type func;
 };
@@ -1302,7 +1303,8 @@ public:
     address_pool_().push_front(convert(ptr_to_func));
 
     functions_.push_back(detail::func_info_type{
-      name, detail::func_stub<1, R, A...>, mcomm::TypeID<R>::value, &address_pool_().front() });
+      name, detail::func_stub<1, R, A...>, std::type_index(typeid(R)),
+	  &address_pool_().front() });
 
     return *this;
   }
@@ -1660,7 +1662,7 @@ public:
     R (C::* const ptr_to_const_member)(A...) const)
   {
     getters_.emplace(name, detail::map_member_info_type{
-      detail::member_stub<3, C, R, A...>, mcomm::TypeID<R>::value, convert(ptr_to_const_member)});
+      detail::member_stub<3, C, R, A...>, std::type_index(typeid(R)), convert(ptr_to_const_member)});
 
     return *this;
   }
@@ -1670,20 +1672,30 @@ public:
     R (C::* const ptr_to_member)(A...))
   {
     getters_.emplace(name, detail::map_member_info_type{
-      detail::member_stub<3, C, R, A...>, mcomm::TypeID<R>::value, convert(ptr_to_member)});
+      detail::member_stub<3, C, R, A...>, std::type_index(typeid(R)), convert(ptr_to_member)});
 
     return *this;
   }
+
+template<int N, typename... Ts> using NthTypeOf =
+        typename std::tuple_element<N, std::tuple<Ts...>>::type;
+
 
   template <class RA, class ...A, class RB, class ...B>
   class_& property(char const* const name,
     RA (C::* const ptr_to_membera)(A...) const,
     RB (C::* const ptr_to_memberb)(B...))
   {
+	using FirstType = NthTypeOf<0, B...>;
+	  LOG(INFO) << "property " << name << " "<< std::string(typeid(FirstType).name(), 6);
     getters_.emplace(name, detail::map_member_info_type{
-      detail::member_stub<3, C, RA, A...>, mcomm::TypeID<RA>::value, convert(ptr_to_membera)});
+      detail::member_stub<3, C, RA, A...>, std::type_index(typeid(RA)),
+		  convert(ptr_to_membera)});
     setters_.emplace(name, detail::map_member_info_type{
-      detail::member_stub<3, C, RB, B...>, mcomm::TypeID<RB>::value, convert(ptr_to_memberb)});
+      detail::member_stub<3, C, RB, B...>, std::type_index(typeid(RB)),
+		  convert(ptr_to_memberb)});
+
+	LOG(INFO) << std::type_index(typeid(RB)).hash_code();
 
     return *this;
   }
@@ -1717,6 +1729,7 @@ public:
       std::unordered_map<std::string, detail::map_member_info_type> result;
       for (auto const& it : setters_)
       {
+		  LOG(INFO) << it.first;
           result.emplace(std::make_pair(it.first, it.second));
       }
 
@@ -1779,7 +1792,7 @@ private:
       "pointer size mismatch");
 
     defs_.push_back(detail::member_info_type{ name,
-      detail::member_stub<O, C, R, A...>, mcomm::TypeID<R>::value, convert(ptr_to_member) });
+      detail::member_stub<O, C, R, A...>, std::type_index(typeid(R)), convert(ptr_to_member) });
   }
 
   template <std::size_t O = 2, class R, class ...A>
@@ -1790,7 +1803,7 @@ private:
       "pointer size mismatch");
 
     defs_.push_back(detail::member_info_type{ name,
-      detail::member_stub<O, C, R, A...>, mcomm::TypeID<R>::value, convert(ptr_to_member) });
+      detail::member_stub<O, C, R, A...>, std::type_index(typeid(R)), convert(ptr_to_member) });
   }
 
 public:

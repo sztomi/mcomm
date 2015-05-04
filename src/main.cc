@@ -1,5 +1,5 @@
+#include "precompiled.h"
 #include "game.h"
-#include "reflection/metaobjectmanager.h"
 
 int main(int argc, char* argv[])
 {

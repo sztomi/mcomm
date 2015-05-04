@@ -3,23 +3,11 @@
 #include <memory>
 #include <string>
 
-#include "glog/logging.h"
-
-#include "entity.h"
-#include "factories.h"
 #include "reflection/metaobjectmanager.h"
-#include "reflection/typeids.h"
-#include "scripting/scriptmanager.h"
-#include "util/constexpr_crc.h"
-#include "util/bind_meta.h"
-
-#include "lua.hpp"
-#include "lualite.hpp"
+#include "simulation/factories.h"
 
 #define COMPONENT(c) component<c##Component>(#c"Component")
-
 #define SYSTEM(s) system<s##System>(#s"System")
-
 
 #define DECLARE_COMPONENT(c) public:                                   \
 	DECLARE_BINDABLE2(c)                                               \
@@ -44,6 +32,7 @@ namespace mcomm
 {
 
 class MetaObject;
+class Entity;
 
 /**
  * Represents a generic Component.
@@ -61,6 +50,12 @@ public:
 
 protected:
     std::shared_ptr<Entity> m_parent;
+};
+
+class System : public Component
+{
+public:
+	virtual void update(float dt) = 0;
 };
 
 }

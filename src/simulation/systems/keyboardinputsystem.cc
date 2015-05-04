@@ -1,11 +1,9 @@
-#include <SFML/Window/Keyboard.hpp>
+#include "precompiled.h"
 
 #include "simulation/components/speedcomponent.h"
 #include "simulation/components/transformcomponent.h"
 #include "keyboardinputsystem.h"
 #include "velocitysystem.h"
-
-#include "glog/logging.h"
 
 namespace mcomm
 {

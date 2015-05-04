@@ -1,10 +1,6 @@
-#include <iostream>
-#include <fstream>
-#include "jsonxx.h"
+#include "precompiled.h"
 
 #include "world.h"
-#include "entity.h"
-#include "factories.h"
 #include "simulation/components/transformcomponent.h"
 
 namespace mcomm

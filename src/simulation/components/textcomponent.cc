@@ -1,5 +1,4 @@
-#include "jsonxx.h"
-#include <SFML/Graphics/Text.hpp>
+#include "precompiled.h"
 
 #include "drawablecomponent.h"
 #include "textcomponent.h"

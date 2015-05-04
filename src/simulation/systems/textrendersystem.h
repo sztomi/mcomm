@@ -1,6 +1,7 @@
 #pragma once
 
-#include "simulation/system.h"
+#include "precompiled.h"
+#include "simulation/component.h"
 
 namespace mcomm
 {

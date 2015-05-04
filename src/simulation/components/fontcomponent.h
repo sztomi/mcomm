@@ -1,9 +1,6 @@
 #pragma once
 
-#include <memory>
-
-#include <SFML/Graphics/Font.hpp>
-
+#include "precompiled.h"
 #include "simulation/component.h"
 
 namespace mcomm

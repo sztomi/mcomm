@@ -1,9 +1,7 @@
 #pragma once
 
-#include "SFML/Graphics/Sprite.hpp"
-
-#include "../system.h"
-
+#include "precompiled.h"
+#include "simulation/component.h"
 
 namespace mcomm
 {

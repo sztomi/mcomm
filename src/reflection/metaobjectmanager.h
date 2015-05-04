@@ -1,10 +1,6 @@
 #pragma once
 
-#include <unordered_map>
-#include <vector>
-
-#include "glog/logging.h"
-
+#include "precompiled.h"
 #include "metaobject.h"
 
 namespace mcomm

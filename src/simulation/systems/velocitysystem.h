@@ -1,8 +1,7 @@
 #pragma once
 
-#include <SFML/System/Vector2.hpp>
-
-#include "../system.h"
+#include "precompiled.h"
+#include "simulation/component.h"
 
 namespace mcomm
 {

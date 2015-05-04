@@ -1,7 +1,7 @@
 #pragma once
 
+#include "simulation/component.h"
 #include "util/bind_meta.h"
-#include "simulation/factories.h"
 
 namespace mcomm
 {
@@ -12,13 +12,13 @@ class AnimationFrame
 public:
 	AnimationFrame(int x, int y, int lengthMs);
 
-	int texCoordX() const;
-	int texCoordY() const;
-	int frameLength() const;
+	int texCoordX() const { return m_texCoordX; }
+	int texCoordY() const { return m_texCoordY; }
+	int frameLength() const { return m_frameLength; }
 
-	void setTexCoordX(int value);
-	void setTexCoordY(int value);
-    void setFrameLength(int value);
+	void setTexCoordX(int value) { LOG(INFO) << "setTexCoordX " << value; m_texCoordX = value; }
+	void setTexCoordY(int value) { m_texCoordY = value; }
+	void setFrameLength(int value) { m_frameLength = value; }
 
 private:
 	int m_texCoordX, m_texCoordY;

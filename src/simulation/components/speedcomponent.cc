@@ -1,6 +1,5 @@
+#include "precompiled.h"
 #include "speedcomponent.h"
-
-#include <lualite.hpp>
 
 using namespace jsonxx;
 using namespace lualite;

@@ -1,14 +1,9 @@
 #pragma once
 
-#include "component.h"
+#include "precompiled.h"
 
 namespace mcomm
 {
 
-class System : public Component
-{
-public:
-	virtual void update(float dt) = 0;
-};
 
 }

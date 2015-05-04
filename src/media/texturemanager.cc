@@ -1,6 +1,4 @@
-#include <boost/format.hpp>
-
-#include <SFML/Graphics/Texture.hpp>
+#include "precompiled.h"
 
 #include "texturemanager.h"
 

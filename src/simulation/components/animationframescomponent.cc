@@ -1,9 +1,5 @@
+#include "precompiled.h"
 #include "animationframescomponent.h"
-#include "util/bind_meta.h"
-#include "reflection/metaobjectmanager.h"
-#include "simulation/factories.h"
-
-#include "jsonxx.h"
 
 namespace mcomm
 {
