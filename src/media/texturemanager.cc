@@ -2,7 +2,7 @@
 
 #include "texturemanager.h"
 
-#ifdef UNIX
+#ifdef BOOST_OS_LINUX
 	#include <unistd.h>
 #else
 	#include <direct.h>

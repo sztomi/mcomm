@@ -8,21 +8,22 @@ namespace mcomm
 
 class FontComponent : public Component
 {
-	DECLARE_COMPONENT(FontComponent)
-
 public:
+    FontComponent();
+
     std::shared_ptr<sf::Font> font() const;
 
-    int size() const;
-    void setSize(int value);
+    GET int size() const;
+    SET void setSize(int value);
 
-	std::string fileName() const;
-	void setFileName(std::string const& value);
+    GET std::string fileName() const;
+    SET void setFileName(std::string const& value);
 
 private:
     std::shared_ptr<sf::Font> m_font;
-	std::string m_filename;
+    std::string m_filename;
     int m_size;
 };
 
 }
+REFLECT_TYPE(mcomm::FontComponent)

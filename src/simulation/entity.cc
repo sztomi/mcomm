@@ -1,5 +1,6 @@
 #include "precompiled.h"
 #include "entity.h"
+#include "factories.h"
 
 namespace mcomm
 {

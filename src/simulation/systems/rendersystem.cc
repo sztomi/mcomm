@@ -8,9 +8,6 @@
 namespace mcomm
 {
 
-BIND_SYSTEM(RenderSystem)
-BIND_END()
-
 RenderSystem::RenderSystem() {}
 
 void RenderSystem::update(float dt)

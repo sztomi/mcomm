@@ -5,7 +5,7 @@ solution "mcomm"
     language "C++"
 	kind "ConsoleApp"
 
-    buildoptions { "-std=c++11" }
+    buildoptions { "-std=c++14" }
     configurations { "debug", "release" }
 
     links {
@@ -13,15 +13,22 @@ solution "mcomm"
         "sfml-window",
         "sfml-graphics",
         "boost_iostreams",
+        "boost_python3",
         "glog",
-        "lua"
+        "python3.4m",
+        "Box2D",
+        "camp",
     }
 
     includedirs {
-		"./src",
-		"./src/3rdparty/include",
-	}
-    libdirs { "./src/3rdparty/lib" }
+        "./src",
+        "./src/3rdparty/include",
+        "/usr/include/python3.4m",
+    }
+
+    libdirs {
+        "./src/3rdparty/lib"
+    }
 
     configuration "debug"
         targetdir "build/debug"
@@ -37,7 +44,13 @@ solution "mcomm"
 
     project "mcomm"
         kind "ConsoleApp"
-        files { "./src/**.h", "./src/**.cc", "./src/**.cpp" }
+        files {
+            "./src/**.h",
+            "./src/**.cc",
+            "./src/**.cpp",
+            "./generated/generated.cc",
+        }
+        pchheader "precompiled.h"
 
     project "test"
         kind "ConsoleApp"

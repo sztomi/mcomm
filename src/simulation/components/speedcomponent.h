@@ -8,16 +8,17 @@ namespace mcomm
 
 class SpeedComponent : public Component
 {
-	DECLARE_COMPONENT(SpeedComponent)
-
 public:
-    float x() const;
-    void setX(float value);
-    float y() const;
-    void setY(float value);
+    SpeedComponent();
+
+    GET float x() const;
+    SET void setX(float value);
+    GET float y() const;
+    SET void setY(float value);
 
 private:
     float m_x, m_y;
 };
 
 }
+REFLECT_TYPE(mcomm::SpeedComponent)

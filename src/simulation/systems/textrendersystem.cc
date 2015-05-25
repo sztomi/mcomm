@@ -9,9 +9,6 @@
 namespace mcomm
 {
 
-BIND_SYSTEM(TextRenderSystem)
-BIND_END()
-
 TextRenderSystem::TextRenderSystem() {}
 
 void TextRenderSystem::update(float dt)

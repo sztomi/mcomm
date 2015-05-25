@@ -3,23 +3,8 @@
 #include "drawablecomponent.h"
 #include "textcomponent.h"
 
-
-using namespace lualite;
-
 namespace mcomm
 {
-
-BIND_COMPONENT(TextComponent)
-	.property("text",
-			  &TextComponent::text,
-			  &TextComponent::setText)
-	.property("size",
-			  &TextComponent::size,
-			  &TextComponent::setSize)
-	.property("fontFileName",
-			  &TextComponent::fontFileName,
-			  &TextComponent::setFontFileName)
-BIND_END()
 
 TextComponent::TextComponent()
 {

@@ -13,21 +13,21 @@ namespace mcomm
 
 class SpriteComponent : public Component
 {
-    DECLARE_COMPONENT(SpriteComponent)
-
 public:
-    std::shared_ptr<sf::Sprite> sprite() const;
+    SpriteComponent();
 
-    std::string textureId() const;
-    void setTextureId(const std::string& id);
+    GET std::shared_ptr<sf::Sprite> sprite() const;
 
-    int spriteCoordX() const;
-    void setSpriteCoordX(int value);
+    GET std::string textureId() const;
+    SET void setTextureId(const std::string& id);
 
-    int spriteCoordY() const;
-    void setSpriteCoordY(int value);
+    GET int spriteCoordX() const;
+    SET void setSpriteCoordX(int value);
 
-	void setParent(std::shared_ptr<Entity> const& parent) override;
+    GET int spriteCoordY() const;
+    SET void setSpriteCoordY(int value);
+
+    HIDDEN void setParent(std::shared_ptr<Entity> const& parent) override;
 
 private:
     void updateTexRectangle();
@@ -40,3 +40,4 @@ private:
 };
 
 }
+REFLECT_TYPE(mcomm::SpriteComponent)

@@ -1,12 +1,14 @@
 #include "precompiled.h"
 #include "game.h"
+#include "bindings/bindings.h"
+
 
 int main(int argc, char* argv[])
 {
-	using namespace mcomm;
+    using namespace mcomm;
 
-    mcomm::MetaObjectManager::instance().bindClasses();
-	Game::instance().setup();
-	Game::instance().run();
-	return 0;
+    initBindings();
+    Game::instance().setup();
+    Game::instance().run();
+    return 0;
 }

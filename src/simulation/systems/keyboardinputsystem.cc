@@ -8,9 +8,6 @@
 namespace mcomm
 {
 
-BIND_SYSTEM(KeyboardInputSystem)
-BIND_END()
-
 KeyboardInputSystem::KeyboardInputSystem() {}
 
 void KeyboardInputSystem::update(float dt)

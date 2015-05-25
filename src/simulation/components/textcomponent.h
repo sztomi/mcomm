@@ -13,17 +13,17 @@ namespace mcomm
 
 class TextComponent : public Component
 {
-    DECLARE_COMPONENT(TextComponent)
-
 public:
-    std::string text() const;
-    void setText(const std::string& value);
+    TextComponent();
 
-    unsigned int size() const;
-    void setSize(unsigned int value);
+    GET std::string text() const;
+    SET void setText(const std::string& value);
 
-    std::string fontFileName() const;
-    void setFontFileName(const std::string& value);
+    GET unsigned int size() const;
+    SET void setSize(unsigned int value);
+
+    GET std::string fontFileName() const;
+    SET void setFontFileName(const std::string& value);
 
 private:
     std::shared_ptr<sf::Text> m_text;
@@ -32,3 +32,4 @@ private:
 };
 
 }
+REFLECT_TYPE(mcomm::TextComponent)

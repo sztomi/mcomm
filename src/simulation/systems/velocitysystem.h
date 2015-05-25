@@ -8,15 +8,21 @@ namespace mcomm
 
 class VelocitySystem : public System
 {
-	DECLARE_COMPONENT(VelocitySystem)
 public:
-	sf::Vector2f velocity() const;
+    VelocitySystem();
+    void update(float dt) override;
 
-	void update(float dt) override;
-	void setVelocity(const sf::Vector2f& value);
+    HIDDEN sf::Vector2f velocity() const;
+    HIDDEN void setVelocity(const sf::Vector2f& value);
+
+    GET float x() const { return m_velocity.x; }
+    SET void setX(float value) { m_velocity.x = value; }
+    GET float y() const { return m_velocity.y; }
+    SET void setY(float value) { m_velocity.y = value; }
 
 private:
-	sf::Vector2f m_velocity;
+    sf::Vector2f m_velocity;
 };
 
 }
+REFLECT_TYPE(mcomm::VelocitySystem)

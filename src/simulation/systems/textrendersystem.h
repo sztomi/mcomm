@@ -8,9 +8,10 @@ namespace mcomm
 
 class TextRenderSystem : public System
 {
-	DECLARE_COMPONENT(TextRenderSystem)
 public:
+    TextRenderSystem();
 	void update(float dt) override;
 };
 
 }
+REFLECT_TYPE(mcomm::TextRenderSystem)

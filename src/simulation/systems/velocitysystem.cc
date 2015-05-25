@@ -7,9 +7,6 @@
 namespace mcomm
 {
 
-BIND_SYSTEM(VelocitySystem)
-BIND_END()
-
 VelocitySystem::VelocitySystem() {}
 
 void VelocitySystem::update(float dt)

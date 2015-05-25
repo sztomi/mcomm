@@ -2,6 +2,7 @@
 
 #include "world.h"
 #include "simulation/components/transformcomponent.h"
+#include "factories.h"
 
 namespace mcomm
 {

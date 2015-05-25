@@ -8,9 +8,10 @@ namespace mcomm
 
 class RenderSystem : public System
 {
-	DECLARE_COMPONENT(RenderSystem)
 public:
-	void update(float dt) override;
+    RenderSystem();
+    void update(float dt) override;
 };
 
 }
+REFLECT_TYPE(mcomm::RenderSystem)

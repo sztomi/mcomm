@@ -16,45 +16,31 @@ public:
 
     ScriptManager(const ScriptManager&) = delete;
 
-    lua_State* L() const { return m_luaState; }
-
-    std::string doString(const std::string& script)
-    {
-        luaL_dostring(m_luaState, script.c_str());
-        auto ret = lua_tostring(m_luaState, -1);
-        if (ret)
-            return std::string(ret);
-        else
-            return "";
-    }
-
     template<class C>
     void pushInstance(C* instance, const std::string& name)
     {
-        lualite::detail::push_instance(m_luaState, instance, name);
+        namespace bp = boost::python;
+        bp::import("__main__").attr(name.c_str()) = bp::object(bp::ptr(instance));
     }
 
-    template<class C>
-    void registerClass(lualite::class_<C>& c)
+    void execString(const std::string& script)
     {
-        lualite::module(m_luaState, c);
+        namespace bp = boost::python;
+        auto main_module = bp::import("__main__");
+        auto main_ns = main_module.attr("__dict__");
+        bp::exec(bp::str(script), main_ns);
     }
 
     ~ScriptManager()
     {
-        lua_close(m_luaState);
+        Py_Finalize();
     }
 
 private:
     ScriptManager()
     {
-        m_luaState = luaL_newstate();
-        luaL_openlibs(m_luaState);
+        Py_Initialize();
     }
-
-
-private:
-    lua_State* m_luaState;
 };
 
 }

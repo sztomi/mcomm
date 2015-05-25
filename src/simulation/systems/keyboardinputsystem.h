@@ -8,10 +8,11 @@ namespace mcomm
 
 class KeyboardInputSystem : public System
 {
-	DECLARE_COMPONENT(KeyboardInputSystem)
-
 public:
-	void update(float dt) override;
+    KeyboardInputSystem();
+
+    void update(float dt) override;
 };
 
 }
+REFLECT_TYPE(mcomm::KeyboardInputSystem)

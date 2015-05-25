@@ -4,14 +4,20 @@ import ycm_core
 flags = [
     '-DDEBUG',
     '-DUNIX',
+    '-I/usr/include/python3.4m',
     '-Isrc',
     '-Isrc/3rdparty/include',
     '-Isrc/3rdparty/include/lua',
     '-Itest/include',
-    '-std=c++11',
+    '-std=c++14',
+    '-stdlib=libc++',
+    '-isystem/usr/include',
     '-isystem/usr/local/include',
-    '-isystem/usr/bin/../lib/clang/3.6.0/include',
-    '-isystem/usr/include'
+    '-isystem/usr/lib/clang/3.6.0/include',
+    '-isystem/usr/include',
+    '-isystem/usr/include/c++/5.1.0',
+    '-isystem/usr/include/c++/v1',
+    '-isystem/usr/include/c++/5.1.0/x86_64-unknown-linux-gnu',
 ]
 
 

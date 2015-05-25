@@ -1,16 +1,8 @@
 #include "precompiled.h"
 #include "speedcomponent.h"
 
-using namespace jsonxx;
-using namespace lualite;
-
 namespace mcomm
 {
-
-BIND_COMPONENT(SpeedComponent)
-	.property("x", &SpeedComponent::x, &SpeedComponent::setX)
-	.property("y", &SpeedComponent::y, &SpeedComponent::setY)
-BIND_END()
 
 SpeedComponent::SpeedComponent()
 	: m_x(0), m_y(0)

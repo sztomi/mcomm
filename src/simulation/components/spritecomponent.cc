@@ -1,31 +1,13 @@
 #include "SFML/Graphics/Rect.hpp"
 #include "glog/logging.h"
 
-#include "lua.hpp"
-#include "lualite.hpp"
-
 #include "media/texturemanager.h"
-#include "reflection/metaobjectmanager.h"
 #include "scripting/scriptmanager.h"
 #include "spritecomponent.h"
 #include "drawablecomponent.h"
 
-using namespace lualite;
-
 namespace mcomm
 {
-
-BIND_COMPONENT(SpriteComponent)
-	.property("textureId",
-			  &SpriteComponent::textureId,
-			  &SpriteComponent::setTextureId)
-	.property("spriteCoordX",
-			  &SpriteComponent::spriteCoordX,
-			  &SpriteComponent::setSpriteCoordX)
-	.property("spriteCoordY",
-			  &SpriteComponent::spriteCoordY,
-			  &SpriteComponent::setSpriteCoordY)
-BIND_END()
 
 SpriteComponent::SpriteComponent()
     : m_sprite(),

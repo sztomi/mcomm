@@ -7,13 +7,6 @@
 namespace mcomm
 {
 
-BIND_SYSTEM(SpriteAnimationSystem)
-	.def("update", &SpriteAnimationSystem::update)
-	.def("stopAt", &SpriteAnimationSystem::stopAt)
-	.def("startFrom", &SpriteAnimationSystem::startFrom)
-	//.def("is_running", &SpriteAnimationSystem::isRunning)
-BIND_END()
-
 SpriteAnimationSystem::SpriteAnimationSystem()
 	: m_currentFrameIndex(0), m_forward(true), m_isRunning(false)
 { }

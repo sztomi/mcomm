@@ -2,14 +2,9 @@
 #include "drawablecomponent.h"
 
 using namespace jsonxx;
-using namespace lualite;
 
 namespace mcomm
 {
-
-BIND_COMPONENT(DrawableComponent)
-BIND_END()
-
 
 DrawableComponent::DrawableComponent()
     : m_drawable(), m_kind("unset")

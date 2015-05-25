@@ -8,10 +8,9 @@ namespace mcomm
 
 class SpriteAnimationSystem : public System
 {
-	DECLARE_COMPONENT(SpriteAnimationSystem)
-
 public:
-	bool isRunning() const;
+    SpriteAnimationSystem();
+	GET bool isRunning() const;
 
 	void update(float dt) override;
 	void stopAt(int frame);
@@ -28,3 +27,4 @@ private:
 };
 
 }
+REFLECT_TYPE(mcomm::SpriteAnimationSystem)

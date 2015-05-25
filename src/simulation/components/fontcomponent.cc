@@ -4,11 +4,6 @@
 namespace mcomm
 {
 
-BIND_COMPONENT(FontComponent)
-	.property("size", &FontComponent::size, &FontComponent::setSize)
-	.property("fileName", &FontComponent::fileName, &FontComponent::setFileName)
-BIND_END()
-
 FontComponent::FontComponent()
 	: m_size(0), m_font(), m_filename("unset") {}
 

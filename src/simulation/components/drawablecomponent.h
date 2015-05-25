@@ -8,11 +8,10 @@ namespace mcomm
 
 class DrawableComponent : public Component
 {
-	DECLARE_COMPONENT(DrawableComponent)
-
 public:
-    void setDrawable(const std::shared_ptr<sf::Drawable> &value);
-    std::shared_ptr<sf::Drawable> drawable() const;
+    DrawableComponent();
+    HIDDEN void setDrawable(const std::shared_ptr<sf::Drawable> &value);
+    HIDDEN std::shared_ptr<sf::Drawable> drawable() const;
 
 private:
     std::shared_ptr<sf::Drawable> m_drawable;
@@ -20,3 +19,4 @@ private:
 };
 
 }
+REFLECT_TYPE(mcomm::DrawableComponent)
