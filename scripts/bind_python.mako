@@ -57,6 +57,7 @@ void init_camp_bindings()
     % endif
     // ${c.filename}
     camp::Class::declare<${c.fullname}>()
+        .constructor0()
     % for f in c.functions:
         % if not "hidden" in f.annotations:
         .function("${f.name}", &${c.name}::${f.name})

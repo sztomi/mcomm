@@ -42,3 +42,6 @@ public:
 };
 
 }
+
+REFLECT_TYPE(mcomm::Component)
+REFLECT_TYPE(mcomm::System)
