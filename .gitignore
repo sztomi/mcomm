@@ -4,3 +4,4 @@ obj
 Makefile
 nohup.out
 *.pyc
+generated

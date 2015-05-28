@@ -1,6 +1,7 @@
 #pragma once
 
 #include "precompiled.h"
+#include "macros.h"
 
 namespace jsonxx { class Object; }
 
@@ -25,7 +26,7 @@ public:
     void update(float dt);
 
     template<typename T>
-    std::shared_ptr<T> component(const std::string& typeStr)
+    HIDDEN std::shared_ptr<T> component(const std::string& typeStr)
     {
         if (m_components.count(typeStr) == 0)
         {
@@ -37,7 +38,7 @@ public:
     }
 
     template<typename T>
-    std::shared_ptr<T> system(const std::string& type)
+    HIDDEN std::shared_ptr<T> system(const std::string& type)
     {
         if (m_systems.count(type) == 0)
         {
@@ -48,7 +49,7 @@ public:
             return std::static_pointer_cast<T>(m_systems[type]);
     }
 
-    jsonxx::Object toJson() const;
+    HIDDEN jsonxx::Object toJson() const;
 
 private:
     int m_id;
@@ -58,3 +59,5 @@ private:
 };
 
 }
+
+REFLECT_TYPE(mcomm::Entity)

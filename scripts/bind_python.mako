@@ -8,13 +8,38 @@ def snake_case(name):
 %>
 #include "precompiled.h"
 #include "bindings/external_types.h"
-
 % for f in set([c.filename for c in classes]):
 #include "${os.path.relpath(f, "src")}"
 % endfor
 
 using namespace boost::python;
 using namespace mcomm;
+<%
+abstract_classes = [c for c in classes if c.is_abstract]
+%>
+% for c in abstract_classes:
+// Wrapper for abstract class ${c.fullname}
+struct ${c.name}Wrap : ${c.fullname}, boost::python::wrapper<${c.fullname}>
+{
+    ${c.name}Wrap() {}
+    ${c.name}Wrap(${c.fullname} const& rhs)
+        : ${c.fullname}(rhs)
+    {}
+
+% for f in c.functions:
+<% arglst = ', '.join([str(a) for a in f.arguments]) %>\
+    ${f.return_type_str} ${f.name}(${arglst})
+    {
+    % if f.return_type_str != 'void':
+        return get_override("${f.name}")(${' '.join([a.name for a in f.arguments])});
+    % else:
+        get_override("${f.name}")(${' '.join([a.name for a in f.arguments])});
+    % endif
+    }
+
+% endfor
+};
+% endfor
 
 BOOST_PYTHON_MODULE(${module_name})
 {
@@ -23,25 +48,26 @@ BOOST_PYTHON_MODULE(${module_name})
 <% continue %>
     % endif
     // ${c.filename}
-	% if len(c.base_names) > 0:
-    class_<${c.fullname}, bases<${','.join(c.base_names)}>>("${c.name}")
-	% else:
-    class_<${c.fullname}>("${c.name}")
-	% endif
+<% class_name = c.name if not c.is_abstract else c.name+"Wrap" %>\
+    % if len(c.base_names) > 0:
+    class_<${class_name}, bases<${','.join(c.base_names)}>>("${c.name}")
+    % else:
+    class_<${class_name}>("${c.name}")
+    % endif
     % for f in c.functions:
         % if not "hidden" in f.annotations:
         % if not f.is_purevirtual:
-        .def("${snake_case(f.name)}", &${c.name}::${f.name})
+        .def("${snake_case(f.name)}", &${class_name}::${f.name})
         % else:
-        .def("${snake_case(f.name)}", pure_virtual(&${c.name}::${f.name}))
+        .def("${snake_case(f.name)}", pure_virtual(&${class_name}::${f.name}))
         % endif
         % endif
     % endfor
 	% for p in c.properties:
 		% if c.properties[p].setter:
-        .add_property("${snake_case(c.properties[p].name)}", &${c.name}::${c.properties[p].getter.name}, &${c.name}::${c.properties[p].setter.name})
+        .add_property("${snake_case(c.properties[p].name)}", &${class_name}::${c.properties[p].getter.name}, &${c.name}::${c.properties[p].setter.name})
 		% else:
-        .add_property("${snake_case(c.properties[p].name)}", &${c.name}::${c.properties[p].getter.name})
+        .add_property("${snake_case(c.properties[p].name)}", &${class_name}::${c.properties[p].getter.name})
 		% endif
 	% endfor
     ;
@@ -56,6 +82,9 @@ void init_camp_bindings()
 <% continue %>
     % endif
     // ${c.filename}
+    % if c.is_abstract:
+    camp::Class::declare<${c.fullname}>();
+    % else:
     camp::Class::declare<${c.fullname}>()
         .constructor0()
     % for f in c.functions:
@@ -71,6 +100,7 @@ void init_camp_bindings()
 		% endif
 	% endfor
     ;
+    % endif
 
 % endfor
 }

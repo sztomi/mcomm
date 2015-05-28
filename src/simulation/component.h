@@ -25,11 +25,11 @@ class Entity;
 class Component
 {
 public:
-    virtual void setParent(std::shared_ptr<Entity> const& parent);
+    HIDDEN virtual void setParent(std::shared_ptr<Entity> const& parent);
     virtual std::string name() const { return "unset"; }
 
-    virtual void loadJson(const jsonxx::Object& o);
-    virtual jsonxx::Object toJson();
+    HIDDEN virtual void loadJson(const jsonxx::Object& o);
+    HIDDEN virtual jsonxx::Object toJson();
 
 protected:
     std::shared_ptr<Entity> m_parent;
@@ -38,7 +38,7 @@ protected:
 class System : public Component
 {
 public:
-	virtual void update(float dt) = 0;
+    virtual void update(float dt) = 0;
 };
 
 }

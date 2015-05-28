@@ -22,17 +22,82 @@ def get_annotations(node):
     return [c.displayname for c in node.get_children()
             if c.kind == clang.cindex.CursorKind.ANNOTATE_ATTR]
 
+class _Util(object):
+    @staticmethod
+    def split_param_list(f):
+        match = re.search(r'\((.*)\)', f.source_line)
+        if match:
+            param_list = match.group(1).split(',')
+            is_done, i, result = False, 0, []
+            count = len(param_list)
+            while not is_done:
+                p = param_list[i].strip()
+                if '<' in p and i+1 < count:
+                    p += ', ' + param_list[i+1].split()[0] + ' ' + param_list[i+1].split()[1]
+                    result.append(p)
+                    i += 1
+                else:
+                    result.append(p)
+                i += 1
+                is_done = (i >= count)
+            return result
+        else:
+            return []
+
+    @staticmethod
+    def header2source(header):
+        return os.path.splitext(header)[0] + '.cpp'
+
+    @staticmethod
+    def tokens_to_typestr(tokenlist):
+        type_str = ''
+        for i, t in enumerate(tokenlist):
+            if t.spelling == 'virtual' or t.spelling == 'static':
+                continue
+            type_str += t.spelling
+            next_is_punct = ((i + 1 < len(tokenlist))
+                             and tokenlist[i+1].kind == clang.cindex.TokenKind.PUNCTUATION)
+            if (not next_is_punct
+                and t.kind != clang.cindex.TokenKind.PUNCTUATION
+                and i != len(tokenlist) - 1):
+                type_str += ' '
+        return type_str
+
+
 class CodeObject(object):
-    def __init__(self, cursor):
+    def __init__(self, cursor, parent=None):
         self.name = cursor.spelling
         self.annotations = get_annotations(cursor)
         loc = cursor.location
         self.source_line = linecache.getline(loc.file.name, loc.line)
+        self.parent = parent
+
+
+class Argument(object):
+    def __init__(self, declaration):
+        self.default_value = None
+        self.name = declaration.split(' ')[-1]
+        """ Handle default parameters """
+        if '=' in declaration:
+            self.default_value = declaration.split('=')[1].strip()
+            tokens = re.split(r'[\s&\*=]+', declaration)
+            self.name = tokens[-2]
+            self.type_str = ' '.join(declaration.split('=')[0].split(' ')[:-2])
+        else:
+            self.type_str = ' '.join(declaration.split('=')[0].split(' ')[:-1])
+
+        while self.name[0] == '&' or self.name[0] == '*':
+            self.type_str += self.name[0]
+            self.name = self.name[1:]
+
+    def __str__(self):
+        return '{} {}'.format(self.type_str, self.name)
 
 class Function(CodeObject):
     def __init__(self, cursor):
         CodeObject.__init__(self, cursor)
         self.name = cursor.spelling
+        self.arguments = []
         self.annotations = get_annotations(cursor)
         self.access = cursor.access_specifier
         self.is_static = cursor.is_static_method()
@@ -44,6 +109,34 @@ class Function(CodeObject):
             self.is_virtual = False
         else:
             self.is_purevirtual = False
+
+        """ Extract return type """
+        ret_type_tokens = []
+        if (cursor.kind == clang.cindex.CursorKind.CONSTRUCTOR or
+           cursor.kind == clang.cindex.CursorKind.DESTRUCTOR):
+            self.return_type_str = ''
+        else:
+            for token in cursor.get_tokens():
+                if token.spelling == self.name:
+                    break
+                ret_type_tokens.append(token)
+            self.return_type_str = _Util.tokens_to_typestr(ret_type_tokens)
+
+        """ Extract arguments """
+        param_decl_list = _Util.split_param_list(self)
+        unordered_arguments = []
+        for decl in param_decl_list:
+            if len(decl) > 0:
+                a = Argument(decl)
+                unordered_arguments.append(a)
+        for pd in param_decl_list:
+            arg_found = False
+            for ua in unordered_arguments:
+                if arg_found: break
+                if ua.name in pd:
+                    self.arguments.append(ua)
+                    arg_found = True
+
 
 class Property(CodeObject):
     def __init__(self, cursor):
@@ -87,6 +180,10 @@ class Class(CodeObject):
                     self.base_names.append(c.displayname.split()[1])
                 else:
                     self.base_names.append(c.displayname)
+
+    @property
+    def is_abstract(self):
+        return sum(1 for f in self.functions if f.is_purevirtual) > 0
 
 def build_classes(cursor, filename):
     result = []
@@ -157,6 +254,7 @@ def main():
 
     headers = enum_headers(args.inputdir)
     reflected_types = collect_reflected_types(headers)
+    print "Reflected types:", reflected_types
 
     pool = Pool(processes=8)
     process_file = functools.partial(process_file_gen, args=args,
