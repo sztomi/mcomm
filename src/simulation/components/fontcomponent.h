@@ -8,6 +8,7 @@ namespace mcomm
 
 class FontComponent : public Component
 {
+    RTTI()
 public:
     FontComponent();
 

@@ -2,8 +2,7 @@
 
 #include "precompiled.h"
 #include "macros.h"
-
-namespace jsonxx { class Object; }
+#include <memory>
 
 namespace mcomm
 {
@@ -11,13 +10,17 @@ namespace mcomm
 class Component;
 class System;
 
+// World owns all entities. This might change in the future
+typedef Entity* EntityPtr;
+
 class Entity : public std::enable_shared_from_this<Entity>
 {
+    RTTI()
 public:
     Entity(int aId, const std::string& aName);
 
-    std::shared_ptr<Component> attachComponent(const std::string& type);
-    std::shared_ptr<System> attachSystem(const std::string& type);
+    Component* attachComponent(const std::string& type);
+    System* attachSystem(const std::string& type);
 
     int id() const;
     std::string toString() const;
@@ -26,38 +29,45 @@ public:
     void update(float dt);
 
     template<typename T>
-    HIDDEN std::shared_ptr<T> component(const std::string& typeStr)
+    HIDDEN T* component(const std::string& typeStr)
     {
         if (m_components.count(typeStr) == 0)
         {
             LOG(ERROR) << typeStr << " not found in entity.";
-            return std::shared_ptr<T>();
+            return nullptr;
         }
         else
-            return std::static_pointer_cast<T>(m_components[typeStr]);
+        {
+            return static_cast<T*>(m_components[typeStr]);
+        }
     }
 
     template<typename T>
-    HIDDEN std::shared_ptr<T> system(const std::string& type)
+    HIDDEN T* system(const std::string& type)
     {
         if (m_systems.count(type) == 0)
         {
             LOG(ERROR) << type << " not found in entity.";
-            return std::shared_ptr<T>();
+            return nullptr;
         }
         else
-            return std::static_pointer_cast<T>(m_systems[type]);
+        {
+            return static_cast<T*>(m_systems[type]);
+        }
     }
 
-    HIDDEN jsonxx::Object toJson() const;
+    static void bindClass();
 
 private:
     int m_id;
     std::string m_name;
-    std::map<std::string, std::shared_ptr<Component>> m_components;
-    std::map<std::string, std::shared_ptr<System>> m_systems;
+    std::map<std::string, Component*> m_components;
+    std::map<std::string, System*> m_systems;
+
+    std::vector<Component*> m_all_components;
+    std::vector<System*> m_all_systems;
 };
 
 }
 
-REFLECT_TYPE(mcomm::Entity)
+CAMP_TYPE(mcomm::Entity)

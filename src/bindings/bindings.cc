@@ -1,6 +1,7 @@
 #include "precompiled.h"
 #include "bindings.h"
 #include "external_types.h"
+#include "simulation/world.h"
 
 namespace mcomm
 {
@@ -22,6 +23,13 @@ void initBindings()
     camp::Class::declare<sf::Drawable>()
         .tag("sf::Drawable")
         ;
+
+    camp::Class::declare<sf::Transformable>()
+        .tag("sf::Transformable")
+        ;
+
+    World::bindClass();
+    Entity::bindClass();
 
     initGeneratedBindings();
 }

@@ -8,6 +8,7 @@ namespace mcomm
 
 class B2DComponent : public Component
 {
+    RTTI()
 public:
     B2DComponent();
     //void setPosition(float x, float y);

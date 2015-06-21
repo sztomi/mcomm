@@ -29,44 +29,34 @@ void Entity::update(float dt)
     }
 }
 
-std::shared_ptr<Component> Entity::attachComponent(const std::string& type)
+Component* Entity::attachComponent(const std::string& type)
 {
     auto c = ObjectFactory::instance().create<Component>(type);
     m_components[type] = c;
-	LOG(INFO) << "Adding component:" << type;
-    c->setParent(shared_from_this());
+    m_all_components.push_back(c);
+    LOG(INFO) << "Adding component:" << type;
+    c->setParent(this);
     return c;
 }
 
-std::shared_ptr<System> Entity::attachSystem(const std::string& type)
+System* Entity::attachSystem(const std::string& type)
 {
     auto s = ObjectFactory::instance().create<System>(type);
     m_systems[type] = s;
-    s->setParent(shared_from_this());
-	LOG(INFO) << "Adding system:" << type;
+    m_all_systems.push_back(s);
+    s->setParent(this);
+    LOG(INFO) << "Adding system:" << type;
     return s;
 }
 
-jsonxx::Object Entity::toJson() const
+void Entity::bindClass()
 {
-	jsonxx::Object result;
-	jsonxx::Array components, systems;
-
-	for (auto& c : m_components)
-	{
-		components << jsonxx::Object(c.second->name(), c.second->toJson());
-	}
-
-	for (auto& s : m_systems)
-	{
-		systems << jsonxx::Object(s.second->name(), s.second->toJson());
-	}
-
-	result << "name" << m_name;
-	result << "components" << components;
-	result << "systems" << systems;
-
-	return result;
+    camp::Class::declare<Entity>()
+        .property("id", &mcomm::Entity::id)
+        .property("components", &mcomm::Entity::m_all_components)
+        .property("system", &Entity::m_all_systems)
+        .function("toString", &mcomm::Entity::toString)
+    ;
 }
 
 }

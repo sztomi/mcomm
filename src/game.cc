@@ -2,6 +2,12 @@
 
 #include "game.h"
 #include "media/texturemanager.h"
+#include "simulation/factories.h"
+#include "simulation/components/drawablecomponent.h"
+#include "simulation/components/spritecomponent.h"
+#include "simulation/components/transformcomponent.h"
+#include "simulation/components/speedcomponent.h"
+#include "simulation/components/animationframescomponent.h"
 
 namespace mcomm
 {
@@ -21,14 +27,13 @@ std::shared_ptr<sf::RenderWindow> Game::renderWindow() const
 void Game::setup()
 {
 	TextureManager::instance().addTexture("res/sprites1.png", "sprite1");
-/*
-	std::shared_ptr<void> af = ObjectFactory::instance().create<AnimationFrame>("AnimationFrame");
+
 	auto player = EntityFactory::instance().createNew("Player");
-	player->attachComponent("DrawableComponent");
-	player->attachComponent("SpriteComponent");
-	player->attachComponent("TransformComponent");
-	player->attachComponent("SpeedComponent");
-	player->attachComponent("AnimationFramesComponent");
+	player->attachComponent("mcomm::DrawableComponent");
+	player->attachComponent("mcomm::SpriteComponent");
+	player->attachComponent("mcomm::TransformComponent");
+	player->attachComponent("mcomm::SpeedComponent");
+	player->attachComponent("mcomm::AnimationFramesComponent");
 
 	player->COMPONENT(Sprite)->setTextureId("sprite1");
 
@@ -49,17 +54,16 @@ void Game::setup()
 	a->addFrame({0, 0, 100});
 	a->addFrame({2, 0, 130});
 
-	player->attachSystem("RenderSystem");
-	player->attachSystem("VelocitySystem");
-	player->attachSystem("SpriteAnimationSystem");
-	player->attachSystem("KeyboardInputSystem");
+	player->attachSystem("mcomm::RenderSystem");
+	player->attachSystem("mcomm::VelocitySystem");
+	player->attachSystem("mcomm::SpriteAnimationSystem");
+	player->attachSystem("mcomm::KeyboardInputSystem");
 
 	world.addEntity(player);
 
-	world.saveJson("level1.json");*/
-	world.loadJson("res/level1.json");
 	//world.loadJson("res/start_entities.xml");
-	world.saveJson("level_saved.json");
+	world.save("level1_saved.xml");
+	world.load("level1_saved.xml");
 }
 
 void Game::run()

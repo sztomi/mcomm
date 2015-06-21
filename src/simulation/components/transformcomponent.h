@@ -8,6 +8,7 @@ namespace mcomm
 
 class TransformComponent : public Component, public sf::Transformable
 {
+    RTTI()
 public:
     TransformComponent();
 

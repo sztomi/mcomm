@@ -13,6 +13,7 @@ namespace mcomm
 
 class TextComponent : public Component
 {
+    RTTI()
 public:
     TextComponent();
 

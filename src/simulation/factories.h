@@ -23,12 +23,12 @@ public:
     }
 
     template<typename T>
-    std::shared_ptr<T> create(const std::string& type)
+    T* create(const std::string& type)
     {
         auto& metaclass = camp::classById(camp::StringId(type.c_str()));
         auto userobj = metaclass.construct(camp::Args());
 
-        return std::shared_ptr<T>(userobj.get<T*>());
+        return userobj.get<T*>();
     }
 };
 
@@ -37,8 +37,7 @@ class EntityFactory
 public:
     static EntityFactory& instance();
 
-    std::shared_ptr<Entity> createNew(const std::string& name);
-    std::shared_ptr<Entity> createNew(const std::string& name, const jsonxx::Object& o);
+    Entity* createNew(const std::string& name);
 
 private:
     EntityFactory() : m_ids(0) {}

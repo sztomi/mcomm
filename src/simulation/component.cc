@@ -1,24 +1,13 @@
 #include "precompiled.h"
+#include <camp/detail/classmanager.hpp>
+#include <camp/type.hpp>
 
 namespace mcomm
 {
 
-void Component::setParent(std::shared_ptr<Entity> const& parent)
+void Component::setParent(Entity* parent)
 {
     m_parent = parent;
-}
-
-
-jsonxx::Object Component::toJson()
-{
-    jsonxx::Object result;
-
-    return result;
-}
-
-void Component::loadJson(const jsonxx::Object& o)
-{
-    using namespace jsonxx;
 }
 
 }

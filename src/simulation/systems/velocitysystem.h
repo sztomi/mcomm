@@ -8,6 +8,7 @@ namespace mcomm
 
 class VelocitySystem : public System
 {
+    RTTI()
 public:
     VelocitySystem();
     void update(float dt) override;

@@ -8,6 +8,7 @@ namespace mcomm
 
 class KeyboardInputSystem : public System
 {
+    RTTI()
 public:
     KeyboardInputSystem();
 

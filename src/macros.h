@@ -16,5 +16,12 @@
 #endif
 
 #define REFLECT_TYPE CAMP_TYPE
+#define RTTI() \
+    _Pragma("clang diagnostic push") \
+    _Pragma("clang diagnostic ignored \"-Winconsistent-missing-override\"") \
+    public: HIDDEN virtual uint32_t campClassId() const { return camp::detail::staticTypeId(this); } \
+    public: HIDDEN virtual const char* campClassName() const {return camp::detail::staticTypeName(this);} \
+    _Pragma("clang diagnostic pop") \
+    private:
 
 #endif /* end of include guard: MACROS_H_BALPZZA8 */

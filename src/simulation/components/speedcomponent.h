@@ -8,6 +8,7 @@ namespace mcomm
 
 class SpeedComponent : public Component
 {
+    RTTI()
 public:
     SpeedComponent();
 

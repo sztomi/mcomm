@@ -13,6 +13,7 @@ namespace mcomm
 
 class SpriteComponent : public Component
 {
+    RTTI()
 public:
     SpriteComponent();
 
@@ -27,7 +28,7 @@ public:
     GET int spriteCoordY() const;
     SET void setSpriteCoordY(int value);
 
-    HIDDEN void setParent(std::shared_ptr<Entity> const& parent) override;
+    HIDDEN void setParent(Entity* parent) override;
 
 private:
     void updateTexRectangle();

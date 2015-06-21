@@ -7,6 +7,7 @@ namespace mcomm
 
 class AnimationFrame
 {
+    RTTI()
 public:
     AnimationFrame();
     AnimationFrame(int x, int y, int lengthMs);

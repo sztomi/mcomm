@@ -8,6 +8,7 @@ namespace mcomm
 
 class RenderSystem : public System
 {
+    RTTI()
 public:
     RenderSystem();
     void update(float dt) override;

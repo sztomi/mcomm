@@ -1,56 +1,72 @@
 #include "precompiled.h"
 
 #include "world.h"
+#include "entity.h"
 #include "simulation/components/transformcomponent.h"
 #include "factories.h"
+
+#include <camp-xml/rapidxml.hpp>
+#include "rapidxml.hpp"
+#include "rapidxml_print.hpp"
+
+using namespace rapidxml;
 
 namespace mcomm
 {
 
+void World::bindClass()
+{
+    camp::Class::declare<World>()
+        .function("update", &World::update)
+        .property("entities", &World::m_entities)
+        .readable(true)
+        .writable(true)
+        ;
+}
+
 void World::update(float dt)
 {
-	for (auto& entity : m_entities)
-	{
-		entity->update(dt);
-	}
+    for (auto& entity : m_entities)
+    {
+        entity->update(dt);
+    }
 }
 
-void World::addEntity(std::shared_ptr<Entity> entity)
+void World::addEntity(Entity* entity)
 {
-	m_entities.push_back(entity);
+    m_entities.push_back(entity);
 }
 
-void World::saveJson(std::string const& fileName)
+void World::save(std::string const& fileName)
 {
-	jsonxx::Object output;
-	jsonxx::Array entities;
-	for (auto& e : m_entities)
-	{
-		entities << jsonxx::Object(e->name(), e->toJson());
-	}
-	output << "entities" << entities;
+    xml_document<> doc;
+    xml_node<>* decl = doc.allocate_node(node_declaration);
+    decl->append_attribute(doc.allocate_attribute("version", "1.0"));
+    decl->append_attribute(doc.allocate_attribute("encoding", "utf-8"));
+    doc.append_node(decl);
 
-	std::fstream outfile(fileName, std::ios::out);
-	outfile << output.json();
+    xml_node<>* root = doc.allocate_node(node_element, "world");
+    root->append_attribute(doc.allocate_attribute("version", "0.1"));
+    doc.append_node(root);
+
+    camp::xml::serialize(camp::UserObject(this), root, "hidden");
+
+    std::fstream out_file(fileName, std::ios::out);
+    out_file << doc;
 }
 
-void World::loadJson(const std::string& fileName)
+void World::load(const std::string& fileName)
 {
-	std::fstream f(fileName, std::ios::in);
-	jsonxx::Object worldjson;
-	worldjson.parse(f);
+    auto& meta = camp::classById(campClassId());
 
-	auto entities = worldjson.get<jsonxx::Array>("entities");
-
-	for (std::size_t i = 0; i < entities.size(); ++i)
-	{
-		auto e = entities.get<jsonxx::Object>(i);
-		auto name = begin(e.kv_map())->first;
-		auto obj = begin(e.kv_map())->second->get<jsonxx::Object>();
-		auto entity = EntityFactory::instance().createNew(name, obj);
-		addEntity(entity);
-	}
-
+    std::ifstream in_file(fileName, std::ios::in);
+    xml_document<> doc;
+    std::stringstream xml;
+    xml << in_file.rdbuf();
+    std::string buf = xml.str();
+    doc.parse<0>(&buf[0]);
+    auto* root = doc.first_node("world");
+    camp::xml::deserialize(this, root, "hidden");
 }
 
 }

@@ -9,6 +9,7 @@ namespace mcomm
 
 class AnimationFramesComponent : public Component
 {
+    RTTI()
 public:
     AnimationFramesComponent();
 

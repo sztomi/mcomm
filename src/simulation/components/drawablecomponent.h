@@ -8,6 +8,7 @@ namespace mcomm
 
 class DrawableComponent : public Component
 {
+    RTTI()
 public:
     DrawableComponent();
     HIDDEN void setDrawable(const std::shared_ptr<sf::Drawable> &value);

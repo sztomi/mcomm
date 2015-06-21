@@ -8,6 +8,7 @@ namespace mcomm
 
 class SpriteAnimationSystem : public System
 {
+    RTTI()
 public:
     SpriteAnimationSystem();
 	GET bool isRunning() const;
