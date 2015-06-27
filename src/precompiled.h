@@ -43,8 +43,6 @@
 #include "Box2D/Box2D.h"
 #include "glog/logging.h"
 
-#include "jsonxx.h"
-
 // ----------------------------------------
 
 #define TYPE_ID(TYPE) std::type_index(typeid(TYPE))
