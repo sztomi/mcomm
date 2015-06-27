@@ -28,41 +28,41 @@ void Game::setup()
 {
 	TextureManager::instance().addTexture("res/sprites1.png", "sprite1");
 
-	auto player = EntityFactory::instance().createNew("Player");
-	player->attachComponent("mcomm::DrawableComponent");
-	player->attachComponent("mcomm::SpriteComponent");
-	player->attachComponent("mcomm::TransformComponent");
-	player->attachComponent("mcomm::SpeedComponent");
-	player->attachComponent("mcomm::AnimationFramesComponent");
+	//auto player = EntityFactory::instance().createNew("Player");
+	//player->attachComponent("mcomm::DrawableComponent");
+	//player->attachComponent("mcomm::SpriteComponent");
+	//player->attachComponent("mcomm::TransformComponent");
+	//player->attachComponent("mcomm::SpeedComponent");
+	//player->attachComponent("mcomm::AnimationFramesComponent");
 
-	player->COMPONENT(Sprite)->setTextureId("sprite1");
+	//player->COMPONENT(Sprite)->setTextureId("sprite1");
 
-	auto transform = player->COMPONENT(Transform);
-	transform->setScaleX(2.0f);
-	transform->setScaleY(2.0f);
-	transform->setOriginX(16.0f);
-	transform->setOriginY(16.0f);
-	transform->setPositionX(300.0f);
-	transform->setPositionY(200.0f);
+	//auto transform = player->COMPONENT(Transform);
+	//transform->setScaleX(2.0f);
+	//transform->setScaleY(2.0f);
+	//transform->setOriginX(16.0f);
+	//transform->setOriginY(16.0f);
+	//transform->setPositionX(300.0f);
+	//transform->setPositionY(200.0f);
 
-	auto speed = player->COMPONENT(Speed);
-	speed->setX(60.0f);
-	speed->setY(60.0f);
+	//auto speed = player->COMPONENT(Speed);
+	//speed->setX(60.0f);
+	//speed->setY(60.0f);
 
-	auto a = player->COMPONENT(AnimationFrames);
-	a->addFrame({1, 0, 130});
-	a->addFrame({0, 0, 100});
-	a->addFrame({2, 0, 130});
+	//auto a = player->COMPONENT(AnimationFrames);
+	//a->addFrame({1, 0, 130});
+	//a->addFrame({0, 0, 100});
+	//a->addFrame({2, 0, 130});
 
-	player->attachSystem("mcomm::RenderSystem");
-	player->attachSystem("mcomm::VelocitySystem");
-	player->attachSystem("mcomm::SpriteAnimationSystem");
-	player->attachSystem("mcomm::KeyboardInputSystem");
+	//player->attachSystem("mcomm::RenderSystem");
+	//player->attachSystem("mcomm::VelocitySystem");
+	//player->attachSystem("mcomm::SpriteAnimationSystem");
+	//player->attachSystem("mcomm::KeyboardInputSystem");
 
-	world.addEntity(player);
+	//world.addEntity(player);
 
-	//world.loadJson("res/start_entities.xml");
-	world.save("level1_saved.xml");
+	////world.loadJson("res/start_entities.xml");
+	//world.save("level1_saved.xml");
 	world.load("level1_saved.xml");
 }
 

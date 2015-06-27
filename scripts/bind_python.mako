@@ -27,6 +27,7 @@ struct ${c.name}Wrap : ${c.fullname}, boost::python::wrapper<${c.fullname}>
     {}
 
 % for f in c.functions:
+    % if not "hidden" in f.annotations:
 <% arglst = ', '.join([str(a) for a in f.arguments]) %>\
     ${f.return_type_str} ${f.name}(${arglst})
     {
@@ -37,6 +38,7 @@ struct ${c.name}Wrap : ${c.fullname}, boost::python::wrapper<${c.fullname}>
     % endif
     }
 
+    %endif
 % endfor
 };
 % endfor
@@ -86,6 +88,9 @@ void init_camp_bindings()
     camp::Class::declare<${c.fullname}>();
     % else:
     camp::Class::declare<${c.fullname}>()
+    % for base in c.base_names:
+        .base<${base}>()
+    % endfor
         .constructor0()
     % for f in c.functions:
         % if not "hidden" in f.annotations:
@@ -95,8 +100,6 @@ void init_camp_bindings()
 	% for p in c.properties:
 		% if c.properties[p].setter:
         .property("${c.properties[p].name}", &${c.name}::${c.properties[p].getter.name}, &${c.name}::${c.properties[p].setter.name})
-		% else:
-        .property("${c.properties[p].name}", &${c.name}::${c.properties[p].getter.name})
 		% endif
 	% endfor
     ;

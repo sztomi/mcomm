@@ -41,6 +41,12 @@ void SpriteComponent::setTextureId(const std::string& id)
         m_sprite->setTexture(*m_texture.get());
 }
 
+void SpriteComponent::revive()
+{
+    setTextureId(m_texture_id);
+    updateTexRectangle();
+}
+
 int SpriteComponent::spriteCoordX() const
 {
     return m_sprite_coord_x;

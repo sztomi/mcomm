@@ -30,6 +30,8 @@ public:
 
     HIDDEN void setParent(Entity* parent) override;
 
+    HIDDEN void revive() override;
+
 private:
     void updateTexRectangle();
 

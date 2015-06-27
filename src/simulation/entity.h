@@ -13,11 +13,13 @@ class System;
 // World owns all entities. This might change in the future
 typedef Entity* EntityPtr;
 
-class Entity : public std::enable_shared_from_this<Entity>
+class Entity
 {
     RTTI()
 public:
+    Entity();
     Entity(int aId, const std::string& aName);
+    ~Entity();
 
     Component* attachComponent(const std::string& type);
     System* attachSystem(const std::string& type);
@@ -27,6 +29,11 @@ public:
     std::string name() const;
 
     void update(float dt);
+
+    /*!
+     * \brief Revives the object after deserialization.
+     */
+    void revive();
 
     template<typename T>
     HIDDEN T* component(const std::string& typeStr)

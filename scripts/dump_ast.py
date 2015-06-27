@@ -5,7 +5,7 @@ import asciitree
 import sys
 
 def node_children(node):
-    return [c for c in node.get_children() if c.location.file.name == sys.argv[1]]
+    return [c for c in node.get_children() if c.location.file and c.location.file.name == sys.argv[1]]
 
 def print_node(node):
     text = node.spelling + "|" + node.displayname
@@ -24,14 +24,21 @@ translation_unit = index.parse(filename,
                                 '-D__CODE_GENERATOR__',
                                 '-DDEBUG',
                                 '-DUNIX',
-                                '-I../src',
                                 '-Isrc',
+                                '-I../src',
                                 '-Isrc/3rdparty/include',
                                 '-Isrc/3rdparty/include/lua',
                                 '-Itest/include',
                                 '-isystem/usr/local/include',
-                                '-isystem/usr/bin/../lib/clang/3.6.0/include',
+                                '-isystem/usr/lib/clang/3.6.0/include',
                                 '-isystem/usr/include'])
 
+def print_all(root, indent=''):
+    for c in root.get_children():
+        print indent, c.spelling
+        print_all(c, indent+'    ')
+
+
 print(asciitree.draw_tree(translation_unit.cursor, node_children, print_node))
+#print_all(translation_unit.cursor)
 

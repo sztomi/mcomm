@@ -24,4 +24,15 @@ AnimationFrame AnimationFramesComponent::frame(int index)
     return m_frames[index];
 }
 
+void AnimationFramesComponent::bindClass()
+{
+    camp::Class::declare<AnimationFramesComponent>()
+        .base<mcomm::Component>()
+        .constructor0()
+        .function("addFrame", &AnimationFramesComponent::addFrame)
+        .function("frame", &AnimationFramesComponent::frame)
+        .property("frames", &AnimationFramesComponent::m_frames)
+    ;
+}
+
 }

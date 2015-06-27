@@ -17,6 +17,11 @@ public:
     void load(const std::string& fileName);
     void save(std::string const& fileName);
 
+    /*!
+     * \brief Removes all entities from the world.
+     */
+    void clear();
+
     static void bindClass();
 
 private:

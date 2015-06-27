@@ -12,13 +12,13 @@ public:
     AnimationFrame();
     AnimationFrame(int x, int y, int lengthMs);
 
-    int texCoordX() const { return m_texCoordX; }
-    int texCoordY() const { return m_texCoordY; }
-    int frameLength() const { return m_frameLength; }
+    GET int texCoordX() const { return m_texCoordX; }
+    GET int texCoordY() const { return m_texCoordY; }
+    GET int frameLength() const { return m_frameLength; }
 
-    void setTexCoordX(int value) { LOG(INFO) << "setTexCoordX " << value; m_texCoordX = value; }
-    void setTexCoordY(int value) { m_texCoordY = value; }
-    void setFrameLength(int value) { m_frameLength = value; }
+    SET void setTexCoordX(int value) { m_texCoordX = value; }
+    SET void setTexCoordY(int value) { m_texCoordY = value; }
+    SET void setFrameLength(int value) { m_frameLength = value; }
 
 private:
     int m_texCoordX, m_texCoordY;

@@ -5,11 +5,42 @@
 namespace mcomm
 {
 
+Entity::Entity()
+    : m_id(-1), m_name("(unset)"),
+    m_components(), m_systems()
+{
+    LOG(INFO) << "Created entity";
+}
+
 Entity::Entity(int aId, const std::string& aName)
     : m_id(aId), m_name(aName),
     m_components(), m_systems()
 {
 
+}
+
+Entity::~Entity()
+{
+    for (auto c : m_all_components) { delete c; }
+    for (auto s : m_all_systems) { delete s; }
+}
+
+void Entity::revive()
+{
+    LOG(INFO) << "Reviving entity";
+    for (auto c : m_all_components)
+    {
+        m_components[c->campClassName()] = c;
+        c->setParent(this);
+        c->revive();
+    }
+
+    for (auto s : m_all_systems)
+    {
+        m_systems[s->campClassName()] = s;
+        s->setParent(this);
+        s->revive();
+    }
 }
 
 int Entity::id() const { return m_id; }
@@ -52,7 +83,9 @@ System* Entity::attachSystem(const std::string& type)
 void Entity::bindClass()
 {
     camp::Class::declare<Entity>()
-        .property("id", &mcomm::Entity::id)
+        .constructor0()
+        .property("id", &mcomm::Entity::m_id)
+        .property("name", &mcomm::Entity::m_name)
         .property("components", &mcomm::Entity::m_all_components)
         .property("system", &Entity::m_all_systems)
         .function("toString", &mcomm::Entity::toString)

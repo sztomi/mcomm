@@ -2,6 +2,8 @@
 #include "bindings.h"
 #include "external_types.h"
 #include "simulation/world.h"
+#include "simulation/entity.h"
+#include "simulation/components/animationframescomponent.h"
 
 namespace mcomm
 {
@@ -32,6 +34,8 @@ void initBindings()
     Entity::bindClass();
 
     initGeneratedBindings();
+
+    AnimationFramesComponent::bindClass();
 }
 
 

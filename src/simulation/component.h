@@ -29,6 +29,8 @@ public:
     HIDDEN virtual void setParent(Entity* parent);
     virtual std::string name() const { return "unset"; }
 
+    virtual void revive() {}
+
 protected:
     Entity* m_parent;
 };
@@ -38,6 +40,7 @@ class System : public Component
     RTTI()
 public:
     virtual void update(float dt) {}
+
 };
 
 }

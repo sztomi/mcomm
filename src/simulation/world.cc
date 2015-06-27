@@ -17,6 +17,7 @@ namespace mcomm
 void World::bindClass()
 {
     camp::Class::declare<World>()
+        .constructor0()
         .function("update", &World::update)
         .property("entities", &World::m_entities)
         .readable(true)
@@ -66,7 +67,16 @@ void World::load(const std::string& fileName)
     std::string buf = xml.str();
     doc.parse<0>(&buf[0]);
     auto* root = doc.first_node("world");
+    clear();
     camp::xml::deserialize(this, root, "hidden");
+
+    for (auto e : m_entities) { e->revive(); }
+}
+
+void World::clear()
+{
+    for (auto e : m_entities) { delete e; }
+    m_entities.clear();
 }
 
 }

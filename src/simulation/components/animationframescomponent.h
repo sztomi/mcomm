@@ -19,10 +19,12 @@ public:
 
     AnimationFrame frame(int index);
 
+    static void bindClass();
+
 private:
     std::vector<AnimationFrame> m_frames;
 };
 
 }
 
-REFLECT_TYPE(mcomm::AnimationFramesComponent)
+CAMP_TYPE(mcomm::AnimationFramesComponent)
