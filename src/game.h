@@ -5,7 +5,7 @@
 
 namespace sf
 {
-	class RenderWindow;
+    class RenderWindow;
 }
 
 namespace mcomm
@@ -13,36 +13,37 @@ namespace mcomm
 
 enum class GameState
 {
-	PRERUN,
-	MENU,
-	RUNNING,
-	EXITING,
-	POSTEXIT
+    PRERUN,
+    MENU,
+    RUNNING,
+    EXITING,
+    POSTEXIT
 };
 
 class Game
 {
 public:
-	void setup();
-	void run();
+    void setup();
+    void run();
+    void drawGui();
 
-	std::shared_ptr<sf::RenderWindow> renderWindow() const;
+    std::shared_ptr<sf::RenderWindow> renderWindow() const;
 
-	static Game& instance()
-	{
-		static Game inst;
-		return inst;
-	}
-
-private:
-	Game();
-
-	void runStep(float frameTime);
+    static Game& instance()
+    {
+        static Game inst;
+        return inst;
+    }
 
 private:
-	World world;
-	GameState state;
-	std::shared_ptr<sf::RenderWindow> m_renderWindow;
+    Game();
+
+    void runStep(float frameTime);
+
+private:
+    World world;
+    GameState state;
+    std::shared_ptr<sf::RenderWindow> m_renderWindow;
 
 };
 
