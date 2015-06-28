@@ -3,9 +3,6 @@
 #include "game.h"
 #include "media/texturemanager.h"
 
-#include "imgui.h"
-#include "imgui-SFML.h"
-
 #include "simulation/factories.h"
 #include "simulation/components/drawablecomponent.h"
 #include "simulation/components/spritecomponent.h"
@@ -18,14 +15,20 @@ namespace Im = ImGui::SFML;
 namespace mcomm
 {
 
-Game::Game() : state(GameState::PRERUN)
+Game::Game()
+    : state(GameState::PRERUN),
+      m_world(std::make_shared<World>()),
+      m_editor(m_world)
 {
-    m_renderWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(1024, 768), "mcomm");
+    m_renderWindow = std::make_shared<sf::RenderWindow>(
+            sf::VideoMode(1024, 768), "mcomm");
     m_renderWindow->setFramerateLimit(60);
     m_renderWindow->setVerticalSyncEnabled(true);
 
+    Im::SetRenderTarget(*m_renderWindow);
     Im::SetWindow(*m_renderWindow);
-    Im::InitImGui();
+    Im::InitImGuiRendering();
+    Im::InitImGuiEvents();
 }
 
 std::shared_ptr<sf::RenderWindow> Game::renderWindow() const
@@ -71,33 +74,42 @@ void Game::setup()
 
     ////world.loadJson("res/start_entities.xml");
     //world.save("level1_saved.xml");
-    world.load("level1_saved.xml");
+    m_world->load("level1_saved.xml");
 }
 
 void Game::run()
 {
     state = GameState::RUNNING;
     sf::Clock clock;
+    sf::Event event;
 
     while (state == GameState::RUNNING)
     {
         float elapsed = clock.restart().asSeconds();
 
-        sf::Event event;
-        m_renderWindow->pollEvent(event);
-        //Im::ProcessEvent(event);
-
-        switch (event.type)
+        while (m_renderWindow->pollEvent(event))
         {
-        case sf::Event::Closed:
-            LOG(INFO) << "Closed event received";
-            state = GameState::EXITING;
-            break;
-        case sf::Event::Resized:
-            m_renderWindow->setView(sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height)));
-            break;
-        default:
-            break;
+            Im::ProcessEvent(event);
+
+            switch (event.type)
+            {
+            case sf::Event::Closed:
+                LOG(INFO) << "Closed event received";
+                state = GameState::EXITING;
+                break;
+            case sf::Event::Resized:
+                m_renderWindow->setView(sf::View(sf::FloatRect(0, 0,
+                                event.size.width, event.size.height)));
+                break;
+            case sf::Event::KeyPressed:
+                if (event.key.code == sf::Keyboard::F12)
+                {
+                    m_designMode = !m_designMode;
+                }
+                break;
+            default:
+                break;
+            }
         }
 
         m_renderWindow->clear(sf::Color(150, 150, 150, 255));
@@ -113,8 +125,10 @@ void Game::runStep(float frameTime)
     while (frameTime > 0.0f)
     {
         float dt = std::min(frameTime, timeStep);
-        world.update(dt);
+        m_world->update(dt);
+
         Im::UpdateImGui();
+        Im::UpdateImGuiRendering();
         drawGui();
 
         frameTime -= dt;
@@ -123,15 +137,8 @@ void Game::runStep(float frameTime)
 
 void Game::drawGui()
 {
-    static bool ui=true;
-    if(ImGui::Begin("Test!", &ui, ImVec2(10, 10)))
-    {
-        ImGui::Text("Hello, world!");
-        ImGui::ShowTestWindow();
-        //ImGui::ShowUserGuide();
-    }
-    ImGui::End();
-    ImGui::Render();
+    if (!m_designMode) { return; }
+    m_editor.draw();
 }
 
 }

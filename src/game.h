@@ -2,6 +2,7 @@
 
 #include "precompiled.h"
 #include "simulation/world.h"
+#include "gui/editor.h"
 
 namespace sf
 {
@@ -41,10 +42,11 @@ private:
     void runStep(float frameTime);
 
 private:
-    World world;
+    bool m_designMode = false;
+    std::shared_ptr<World> m_world;
     GameState state;
     std::shared_ptr<sf::RenderWindow> m_renderWindow;
-
+    Editor m_editor;
 };
 
 }

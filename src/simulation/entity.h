@@ -73,6 +73,8 @@ private:
 
     std::vector<Component*> m_all_components;
     std::vector<System*> m_all_systems;
+
+    friend class Editor;
 };
 
 }

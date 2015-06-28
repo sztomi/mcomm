@@ -79,16 +79,6 @@ void KeyboardInputSystem::update(float dt)
 		}
 	}
 
-	//
-
-	// if (Keyboard::isKeyPressed(Keyboard::Up))
-	// {
-	// 	transform->rotate(90);
-
-	// 	if (Keyboard::isKeyPressed(Keyboard::Right))
-	// 		transform->rotate(-45);
-	// }
-
 	auto velocity = m_parent->SYSTEM(Velocity);
 
 	if (velocity)

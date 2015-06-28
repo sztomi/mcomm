@@ -35,6 +35,10 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
 
+#include "imgui.h"
+#include "imgui-events-SFML.h"
+#include "imgui-rendering-SFML.h"
+
 #include <camp/camptype.hpp>
 #include <camp/class.hpp>
 #include <camp/classbuilder.hpp>

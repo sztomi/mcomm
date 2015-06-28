@@ -26,6 +26,8 @@ public:
 
 private:
     std::vector<Entity*> m_entities;
+
+    friend class Editor;
 };
 
 }
