@@ -1,5 +1,6 @@
 #pragma once
 
+#include "precompiled.h"
 #include <memory>
 
 namespace mcomm
@@ -23,6 +24,7 @@ private:
 
 private:
     std::shared_ptr<World> m_world;
+    std::unordered_map<std::string, std::function<void()>> m_propeditors;
     int m_selected_entity_idx;
 };
 

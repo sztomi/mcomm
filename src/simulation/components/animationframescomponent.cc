@@ -9,7 +9,7 @@ AnimationFramesComponent::AnimationFramesComponent()
 
 }
 
-int AnimationFramesComponent::frameCount() const
+int AnimationFramesComponent::frameCount() const noexcept
 {
     return m_frames.size();
 }

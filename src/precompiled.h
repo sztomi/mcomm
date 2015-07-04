@@ -2,23 +2,27 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <stdexcept>
-#include <iostream>
 #include <fstream>
+#include <functional>
+#include <iostream>
 #include <map>
 #include <memory>
+#include <sstream>
+#include <stdexcept>
 #include <string>
+#include <typeindex>
 #include <unordered_map>
 #include <utility>
 #include <vector>
-#include <functional>
-#include <sstream>
-#include <typeindex>
 
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
 #include <boost/format.hpp>
-#include <Python.h>
-#include <boost/python.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/python.hpp>
+#include <boost/variant.hpp>
+
+#include <Python.h>
 
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Drawable.hpp>

@@ -12,10 +12,10 @@ class SpeedComponent : public Component
 public:
     SpeedComponent();
 
-    GET float x() const;
-    SET void setX(float value);
-    GET float y() const;
-    SET void setY(float value);
+    GET float x() const noexcept;
+    SET void setX(float value) noexcept;
+    GET float y() const noexcept;
+    SET void setY(float value) noexcept;
 
 private:
     float m_x, m_y;

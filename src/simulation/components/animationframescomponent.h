@@ -13,7 +13,7 @@ class AnimationFramesComponent : public Component
 public:
     AnimationFramesComponent();
 
-    GET int frameCount() const;
+    GET int frameCount() const noexcept;
 
     void addFrame(const AnimationFrame& frame);
 

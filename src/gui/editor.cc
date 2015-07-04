@@ -75,7 +75,16 @@ void Editor::drawComponents()
     for (auto c : entity->m_all_components)
     {
         auto& metaClass = camp::classById(c->campClassId());
-        CollapsingHeader(metaClass.name());
+        std::vector<std::string> parts(3);
+        std::string fullName(metaClass.name());
+        boost::split(parts, fullName, boost::is_any_of(":"));
+        CollapsingHeader(parts.back().c_str());
+        //BeginChild("Properties");
+        for (int i = 0; i < metaClass.propertyCount(); ++i)
+        {
+            auto& p = metaClass.getPropertyByIndex(i);
+        }
+        //EndChild();
     }
 
     End();

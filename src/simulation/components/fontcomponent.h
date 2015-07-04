@@ -14,11 +14,11 @@ public:
 
     std::shared_ptr<sf::Font> font() const;
 
-    GET int size() const;
-    SET void setSize(int value);
+    GET int size() const noexcept;
+    SET void setSize(int value) noexcept;
 
-    GET std::string fileName() const;
-    SET void setFileName(std::string const& value);
+    GET std::string fileName() const noexcept;
+    SET void setFileName(std::string const& value) noexcept;
 
 private:
     std::shared_ptr<sf::Font> m_font;

@@ -19,14 +19,14 @@ public:
 
     GET std::shared_ptr<sf::Sprite> sprite() const;
 
-    GET std::string textureId() const;
+    GET std::string textureId() const noexcept;
     SET void setTextureId(const std::string& id);
 
-    GET int spriteCoordX() const;
-    SET void setSpriteCoordX(int value);
+    GET int spriteCoordX() const noexcept;
+    SET void setSpriteCoordX(int value) noexcept;
 
-    GET int spriteCoordY() const;
-    SET void setSpriteCoordY(int value);
+    GET int spriteCoordY() const noexcept;
+    SET void setSpriteCoordY(int value) noexcept;
 
     HIDDEN void setParent(Entity* parent) override;
 

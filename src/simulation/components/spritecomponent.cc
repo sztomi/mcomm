@@ -18,12 +18,12 @@ SpriteComponent::SpriteComponent()
     m_sprite = std::make_shared<sf::Sprite>();
 }
 
-std::shared_ptr<sf::Sprite> SpriteComponent::sprite() const
+std::shared_ptr<sf::Sprite> SpriteComponent::sprite() const noexcept
 {
     return m_sprite;
 }
 
-std::string SpriteComponent::textureId() const
+std::string SpriteComponent::textureId() const noexcept
 {
     return m_texture_id;
 }
@@ -47,23 +47,23 @@ void SpriteComponent::revive()
     updateTexRectangle();
 }
 
-int SpriteComponent::spriteCoordX() const
+int SpriteComponent::spriteCoordX() const noexcept
 {
     return m_sprite_coord_x;
 }
 
-void SpriteComponent::setSpriteCoordX(int value)
+void SpriteComponent::setSpriteCoordX(int value) noexcept
 {
     m_sprite_coord_x = value;
     updateTexRectangle();
 }
 
-int SpriteComponent::spriteCoordY() const
+int SpriteComponent::spriteCoordY() const noexcept
 {
     return m_sprite_coord_y;
 }
 
-void SpriteComponent::setSpriteCoordY(int value)
+void SpriteComponent::setSpriteCoordY(int value) noexcept
 {
     m_sprite_coord_y = value;
     updateTexRectangle();
