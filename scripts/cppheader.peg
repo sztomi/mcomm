@@ -1,0 +1,67 @@
+; This grammar is based on the N3690 C++14 standard draft.
+
+FunctionDefinition <-
+    AttributeSpecifierSeq DeclSpecifierSeq Declarator VirtSpecifier? FunctionBody
+
+DeclSpecifier <-
+      StorageClassSpecifier
+    / TypeSpecifier
+    / FunctionSpecifier
+    / "friend"
+    / "typedef"
+    / "constexpr"
+
+CvQualifier <- "const" / "volatile" / "const volatile"
+
+StorageClassSpecifier <-
+      "register"
+    / "static"
+    / "thread_local"
+    / "extern"
+    / "mutable"
+
+FunctionSpecifier <-
+    "inline" / "virtual" / "explicit"
+
+TypeSpecifier <-
+      TrailingTypeSpecifier
+    / ClassSpecifier
+    / EnumSpecifier
+
+TrailingTypeSpecifier <-
+      SimpleTypeSpecifier
+    / ElaboratedTypeSpecifier
+    / TypenameSpecifier
+    / CvQualifier
+
+SimpleTypeSpecifier <-
+      NestedNameSpecifier? TypeName
+    / NestedNameSpecifier "template" SimpleTemplateId
+    / "char"
+    / "char16_t"
+    / "char32_t"
+    / "wchar_t"
+    / "bool"
+    / "short"
+    / "int"
+    / "long"
+    / "signed"
+    / "unsigned"
+    / "float"
+    / "double"
+    / "void"
+    / "auto"
+    / DecltypeSpecifier
+
+TypeName <-
+      ClassName
+    / EnumName
+    / TypedefName
+    / SimpleTemplateId
+
+DecltypeSpecifier <-
+      "decltype" "(" Expression ")"
+    / "decltype" "(" "auto" ")"
+
+ElaboratedTypeSpecifier <-
+
